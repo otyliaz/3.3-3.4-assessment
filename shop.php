@@ -10,37 +10,34 @@
   </head>
 
 <?php
-require_once ('./includes/connect.inc');
-require_once ('./includes/nav.inc');
+require_once ('./includes/connect.inc'); ?>
 
-
-echo '
 <body>
-<div class="container">';
+<?php include('./includes/nav.php')?>
 
-echo 'anniversary products<br>';
+<div class="container">
 
-echo "
-<form method='get' action='products.php'>
-  <label for='search'>Search for products:</label><br>
-  <input type='text' id='search' name='search' required><br><br> 
-  <input type='submit' name='submit' value='Search'>
-</form>";
+<div class="input-group rounded">
+  <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"/>
+  <span class="input-group-text border-0" id="search-addon">
+    <i class="fas fa-search"></i>
+  </span>
+</div>
 
+<?php
 if (isset($_GET['submit'])){
 
   $search_term = $_GET['search'];
 
-  $query = "SELECT * FROM Products WHERE Name LIKE '%$search_term%'";
+  $query = "SELECT * FROM Product WHERE Name LIKE '%$search_term%'";
 }
 
-else {$query = "SELECT * FROM Products";
+else {
+  $query = "SELECT * FROM Product";
 }
 
 
 $result = $conn->query($query);
-echo $query;
-echo "<p>successful sql</p>";
 
 while($row = $result->fetch_assoc()) {
     $data_result[] = $row;
@@ -60,13 +57,12 @@ else{
       echo "
       <div class='col-md-4'>
         <div class='card mb-2'>
-          <img src='$row[ImageURL]' class='card-img-top' alt='image of the product'>
+          <img src='./images/$row[image_url].jpg' class='card-img-top' alt='image of the product'>
           <div class='card-body'>
-            <h5 class='card-title'>$row[Name]</h5>
-            <p class='card-text'>Description: $row[Description]</p>
-            <p class='card-text'>Price: $row[Price]</p>
-            <p class='card-text'>Stock: $row[Stock]</p>
-            <p class='card-text'>Category: $row[Category]</p>
+            <h5 class='card-title'>$row[name]</h5>
+            <p class='card-text'>Description: $row[description]</p>
+            <p class='card-text'>Price: $row[price]</p>
+            <p class='card-text'>Stock: $row[stock]</p>
           </div>
         </div>
       </div>
