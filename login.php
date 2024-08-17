@@ -1,6 +1,3 @@
-<?php
-session_start()
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,6 +10,7 @@ session_start()
 </head>
 
 <?php
+session_start();
 require_once("includes/connect.inc");
 
 //var_dump($_SERVER['REQUEST_METHOD']);
@@ -25,11 +23,11 @@ if(isset($_POST['login'])) {
     $passworden = hash('sha256', $password);
 
     // if username matches password........
-    $query = "SELECT iduser FROM user WHERE username = ? and password = ? ";
+    $query = "SELECT `iduser`, `admin` FROM user WHERE username = ? and password = ? ";
 
     if ($stmt = mysqli_prepare($conn, $query)) {
         //bind parameters
-        mysqli_stmt_bind_param($stmt, "ss", $username, $passworden);
+        mysqli_stmt_bind_param($stmt, "ss" , $username, $passworden);
         mysqli_stmt_execute($stmt);
         
         //store the result
@@ -39,18 +37,16 @@ if(isset($_POST['login'])) {
             echo $username . ', you are logged in.';
             
             //fetch results
-            mysqli_stmt_bind_result($stmt, $iduser);
+            mysqli_stmt_bind_result($stmt, $iduser, $admin);
             mysqli_stmt_fetch($stmt);
 
-            //set iduser as a session variable
+            // set session variables
             $_SESSION['iduser'] = $iduser;
-
-            //set fname as a session variable
-            // $_SESSION['fname'] = $fname;
-
-            //set username as a session variable
             $_SESSION['username'] = $username;
+            $_SESSION['admin'] = $admin;
+
             header("Location: index.php");
+            exit();
         } 
 
         else {

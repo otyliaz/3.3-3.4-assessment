@@ -7,7 +7,7 @@
                 <a class="navbar-brand" href="index.php"><img id="logo" src="./images/logo.png" alt="CAS 100" height="60px" width= "60px"></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="#">Shop</a>  
+                <a class="nav-link active" href="shop.php">Shop</a>  
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Link 2</a>

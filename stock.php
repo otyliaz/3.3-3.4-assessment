@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Shop - CAS Centenary</title>
+    <title>Restock - CAS Centenary</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -9,29 +9,24 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   </head>
 
-<body>
-
 <?php
+session_start();
 require_once ('./includes/connect.inc');
 
-// if (!isset($_SESSION['admin'])){
-//   // isn't admin, redirect them to a different page
-//   header("Location: index.php");
-// }
+if (!isset($_SESSION['admin'])){
+    // isn't admin, redirect them to a different page
+    header("Location: index.php");
+}
+?>
 
-include('./includes/nav.php')?>
+<body>
+<?php include('./includes/nav.php')?>
 
 <div class="container">
 
-<h1>Shop all merchandise:</h1>
-
-<form action="shop.php" method="get" class="row">
-  <div class="col">
-    <input type="search" class="form-control" name="search" placeholder="Search" aria-label="Search"/>
-  </div>
-  <div class="col-auto">  
-    <button class="btn btn-outline-success" type="submit" name="submit">Search</button>
-  </div>
+<form action="shop.php" method="get" class="form-inline">
+  <input type="search" class="form-control" name="search" placeholder="Search" aria-label="Search"/>
+  <button class="btn btn-outline-success" type="submit" name="submit">Search</button>
 </form>
 
 
