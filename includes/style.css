@@ -1,0 +1,9 @@
+/* #193067
+#DCE1E9 */
+
+
+a .card:hover {
+    text-decoration: underline;
+    border: 1px solid;
+    box-shadow: 0 0 10px #000000;
+}

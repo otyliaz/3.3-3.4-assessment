@@ -2,16 +2,13 @@
 <html lang="en">
   <head>
     <title>Shop - CAS Centenary</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <?php include ('./includes/basehead.html'); ?>
   </head>
 
 <body>
 
 <?php
+session_start();
 require_once ('./includes/connect.inc');
 
 // if (!isset($_SESSION['admin'])){
@@ -23,67 +20,78 @@ include('./includes/nav.php')?>
 
 <div class="container">
 
-<h1>Shop all merchandise:</h1>
+<h1>Shop CAS merchandise:</h1>
 
-<form action="shop.php" method="get" class="row">
-  <div class="col">
+<div class="row">
+
+<form action="shop.php" method="get" class="d-flex">
     <input type="search" class="form-control" name="search" placeholder="Search" aria-label="Search"/>
-  </div>
-  <div class="col-auto">  
-    <button class="btn btn-outline-success" type="submit" name="submit">Search</button>
-  </div>
+    <button class="btn btn-outline-success" type="submit">Search</button>
 </form>
 
 
-
 <?php
-if (isset($_GET['submit'])){
+$query = "SELECT * FROM product";
 
-  $search_term = $_GET['search'];
+if (isset($_GET['search'])){
 
-  $query = "SELECT * FROM Product WHERE Name LIKE '%$search_term%'";
+  //trim off whitespace from search term
+  $search_term = trim($_GET['search']);
+
+  if (!empty($search_term)) {
+    // if search_term is not null or whitespace,
+    $query .= " WHERE name LIKE '%$search_term%'"; //add WHERE clause to original query
+  }
 }
 
-else {
-  $query = "SELECT * FROM Product";
-}
-
+//echo $query;
 
 $result = $conn->query($query);
 
 while($row = $result->fetch_assoc()) {
-    $data_result[] = $row;
-}
+  $data_result[] = $row;
 
-echo "
-<h1>Results:</h1>";
+  $rowcount = $result->num_rows;
+}
 
 if (empty($data_result)) {
-  echo "<p>No results found.</p>";
+  echo '<p>No results found for "'.$search_term.'"</p>';
 }
 
-else{
+else {
+  echo '<p>Showing '.$rowcount.' result(s)';
+
+  if (!empty($search_term)) {
+    // if search_term is not null or whitespace,
+    echo' for "'.$search_term.'"';}
+  
+  echo ':</p> 
+  </div>'; //closing first <div class=row>
+
   echo "<div class='row'>";
 
 
   foreach ($data_result as $row) {
       echo "
       <div class='col-md-4'>
+      <a href='product.php?id=$row[idproduct]' class='text-decoration-none'>
         <div class='card mb-2'>
           <img src='./images/$row[image_url].jpg' class='card-img-top' alt='$row[name]'>
           <div class='card-body'>
             <h5 class='card-title'>$row[name]</h5>
             <p class='card-text'>Description: $row[description]</p>
             <p class='card-text'>Price: $row[price]</p>
-            <p class='card-text'>Stock: $row[stock]</p>
-          </div>
-        </div>
-      </div>
-      <br><br>";
-  }
-  echo "</div>";
+            <p class='card-text'>Stock: $row[stock]</p>";
+            // //if the user is an admin, show an EDIT button.
+            // if (isset($_SESSION['admin']))
+            // {echo "<button class='btn btn-danger'>EDIT</button>";}
+    echo "</div>"; //closing card-body
+  echo "</div> </a>"; // closing card and anchor tag
+echo "</div>"; // closing col
 }
 
+}
+echo "</div>";
 
 $conn->close();
 ?>
@@ -91,5 +99,3 @@ $conn->close();
 </div>
 </body>
 </html>
-
-

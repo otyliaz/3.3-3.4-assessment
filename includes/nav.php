@@ -10,22 +10,22 @@
                 <a class="nav-link active" href="shop.php">Shop</a>  
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Link 2</a>
+                <a class="nav-link" href="cart.php">My Cart</a>
             </li> 
         </ul>
 
-        <ul class="navbar-nav navbar-right">
+        <ul class="navbar-nav navbar-right align-items-center">
             <?php 
             if(isset($_SESSION['iduser'])){
                 //echo '<i class="fa fa-user-circle" aria-hidden="true"></i>'.$_SESSION['username'];
-                echo '<li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fa fa-user-circle" aria-hidden="true"></i>'.$_SESSION['username'].
-                '</a>
-                <ul class="dropdown-menu dropdown-menu-dark">
-                <li><a class="dropdown-item" href="logout.php">Log out</a></li>
-                </ul>
-                </li>';
+                echo '
+                <li class="nav-item">
+                <a class="nav-link"><i class="fa fa-user-circle" aria-hidden="true"></i>'.$_SESSION['username'].'</a>
+                </li> 
+                <li class="btn btn-danger">
+                <a class="nav-link" href="logout.php"><i class="fa fa-sign-out" aria-hidden="true"></i>Log out</a>
+                </li>
+                ';
             }
             else {
                 echo '
