@@ -29,6 +29,7 @@ include('./includes/nav.php')?>
     <button class="btn btn-outline-success" type="submit">Search</button>
 </form>
 
+</div>
 
 <?php
 $query = "SELECT * FROM product";
@@ -46,37 +47,45 @@ if (isset($_GET['search'])){
 
 //echo $query;
 
+  
+if (isset($_SESSION['admin'])) {
+  echo "<a class='btn btn-danger' href='addproduct.php'>Add another product</a>";
+}
+
 $result = $conn->query($query);
+$rowcount = $result->num_rows;
 
 while($row = $result->fetch_assoc()) {
   $data_result[] = $row;
-
-  $rowcount = $result->num_rows;
 }
 
+echo '<p>Showing '.$rowcount.' result(s)';
+
+if (!empty($search_term)) {
+  // if search_term is not null or whitespace,
+  echo' for "'.$search_term.'"';}
+echo ':</p>';
+
 if (empty($data_result)) {
-  echo '<p>No results found for "'.$search_term.'"</p>';
+  echo '<p>Sorry! No results found for "'.$search_term.'. Check your spelling or try a different key word.</p>';
 }
 
 else {
-  echo '<p>Showing '.$rowcount.' result(s)';
-
-  if (!empty($search_term)) {
-    // if search_term is not null or whitespace,
-    echo' for "'.$search_term.'"';}
-  
-  echo ':</p> 
-  </div>'; //closing first <div class=row>
-
   echo "<div class='row'>";
 
-
   foreach ($data_result as $row) {
+    $imagepath = "./images/$row[image_url].jpg";
       echo "
       <div class='col-md-4'>
       <a href='product.php?id=$row[idproduct]' class='text-decoration-none'>
         <div class='card mb-2'>
-          <img src='./images/$row[image_url].jpg' class='card-img-top' alt='$row[name]'>
+          <img src='";
+
+          if (file_exists($imagepath)) {
+            echo $imagepath; }
+          else {echo "./images/no_img.png";}
+          
+          echo "' class='card-img-top' alt='$row[name]'>
           <div class='card-body'>
             <h5 class='card-title'>$row[name]</h5>
             <p class='card-text'>Description: $row[description]</p>

@@ -94,7 +94,7 @@ mysqli_close($conn);
         <input class="form-control" type="text" name="lname" id="lname" placeholder="Type here..." required>
     </div>
     <div class="form-group">
-        <label for="lname">Email:</label>
+        <label for="email">Email:</label>
         <input class="form-control" type="text" name="email" id="email" placeholder="Type here..." required>
     </div>
     <div class="form-group">

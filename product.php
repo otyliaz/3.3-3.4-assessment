@@ -9,11 +9,17 @@ if (isset($_GET['id'])) {
     $query="SELECT * FROM product WHERE idproduct = $idproduct"; 
     $result = $conn->query($query);
 
-    $row = $result->fetch_assoc(); //since idproduct is unique, don't need to validate number of rows
+    if ($result->num_rows > 0) { //if the idproduct exists
+    $row = $result->fetch_assoc(); }
+
+    else {
+      echo "the product you are looking for does not exist";
+      header ("Location: shop.php");
+    }
 }
 
 else {
-    echo 'the page you are looking for does not exist'; //redirect to error page
+    echo 'the page you are looking for does not exist';
 }
 
 ?>
@@ -31,10 +37,20 @@ else {
 <body>
 <?php include('./includes/nav.php');?>
 
+<div class="container">
+
 <div class="row">
 
 <div class="col-md-6">
-<img src='./images/<?=$row['image_url']?>.jpg' class='card-img-top' alt='$row[name]'>
+<?php echo "<img src='";
+
+$imagepath = "./images/$row[image_url].jpg";
+
+  if (file_exists($imagepath)) {
+    echo $imagepath; }
+  else {echo "./images/no_img.png";}
+  
+  echo "' alt='$row[name]'>" ?>
 </div>
 
 <div class='col-md-6'>
@@ -51,12 +67,13 @@ else {
     <?php
     //if the user is an admin, show an EDIT button.
     if (isset($_SESSION['admin']))
-    {echo "<button class='btn btn-danger' href='editproduct.php?id=$row[idproduct]'>EDIT PRODUCT</button>";} ?>
-
-
+    {echo "<a class='btn btn-danger' href='editproduct.php?id=$row[idproduct]'>EDIT PRODUCT</a>";
+    echo "<a class='btn btn-danger' href='deleteproduct.php?id=$row[idproduct]'>DELETE PRODUCT</a>";} ?>
 </div>
             
-</div>
+
+</div> <!--closing row div-->
+</div> <!--closing container div-->
 </body>
 </html>
 
