@@ -27,10 +27,10 @@ include('./includes/nav.php');
 
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="./images/history.jpg" class="w-100 h-100" alt="CAS school photo">
+                    <img src="./images/history1.jpg" class="w-100 h-100" alt="CAS school photo">
                 </div>
                 <div class="carousel-item">
-                    <img src="./images/pic2.png" class="w-100 h-100" alt="...">
+                    <img src="./images/history2.jpg" class="w-100 h-100" alt="CAS school photo">
                 </div>
                 <div class="carousel-item">
                     <img src="./images/pic3.png" class="w-100 h-100" alt="...">

@@ -74,7 +74,7 @@ else {
   echo "<div class='row'>";
 
   foreach ($data_result as $row) {
-    $imagepath = "./images/$row[image_url].jpg";
+    $imagepath = "./images/$row[image_url]";
       echo "
       <div class='col-md-4'>
       <a href='product.php?id=$row[idproduct]' class='text-decoration-none'>

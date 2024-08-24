@@ -19,17 +19,17 @@ if(isset($_POST['register'])) {
     // selects to see if username already exists
     $select = "SELECT `username` FROM user WHERE `username` = ?";
     
-    if ($stmt = mysqli_prepare($conn, $select)) {
+    if ($stmt = $conn->prepare($select)) {
 
         // bind parameters
-        mysqli_stmt_bind_param($stmt, "s", $username);
-        mysqli_stmt_execute($stmt);
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
 
         // store the result
-        mysqli_stmt_store_result($stmt);
+        $stmt->store_result;
 
         // if username already exists -> error
-        if (mysqli_stmt_num_rows($stmt) > 0) {
+        if ($stmt->num_rows > 0) {
             $nametaken = 'This username is already taken. Please choose another one.';
         } 
         else {
@@ -39,7 +39,7 @@ if(isset($_POST['register'])) {
 
                 $query = "INSERT INTO `user` (`username`, `password`, `email`, `fname`, `lname`, `grad_year` ) VALUES (?, ?, ?, ?, ?, ?)";
 
-                if ($stmt2 = mysqli_prepare($conn, $query)) {
+                if ($stmt2 = $conn->prepare($query)) {
 
                     //bind parameters
                     mysqli_stmt_bind_param($stmt2, "sssssi", $username, $passworden, $email, $fname, $lname, $grad_year);

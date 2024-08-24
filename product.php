@@ -20,6 +20,59 @@ if (isset($_GET['id'])) {
 
 else {
     echo 'the page you are looking for does not exist';
+    header ("Location: shop.php");
+}
+
+
+if (isset($_POST['idproduct'], $_POST['quantity'])) {
+    
+  if (isset($_SESSION['iduser'])) {
+    $iduser = $_SESSION['iduser'];
+  } else {
+    echo "create an account to add items to cart! no thanks, i want to continue browsing";
+    exit();
+    //header ("Location: login.php");
+  }
+
+  //checking if user has a cart created
+  $cart_q = "SELECT idcart FROM cart WHERE iduser = $iduser";
+  $cart_r = $conn->query($cart_q);
+
+  if ($cart_r->num_rows == 0) {  //if they don't have a cart created
+      $create_cart_q = "INSERT INTO cart (iduser) VALUES ($iduser)";
+      $create_cart_r = $conn->query($create_cart_q);
+
+      //gets the id (auto_increment value) of the recently inserted row
+      $idcart = $conn->insert_id; 
+
+  }
+  else { //if they have a cart already
+      $row = $cart_r->fetch_assoc(); 
+      $idcart = $row['idcart'];
+      }
+
+    $idproduct = $_POST['idproduct'];
+    $quantity = $_POST['quantity'];
+
+    //check if the product is already in the user's cart and how many
+    $check_q = "SELECT item_quantity FROM cart_item WHERE idcart = $idcart AND idproduct = $idproduct";
+    $check_r = $conn->query($check_q);
+
+    if ($check_r->num_rows > 0) { //if the product is already in the cart
+        $row = $check_r->fetch_assoc();
+        $new_quantity = $row['item_quantity'] + $quantity;
+        $update_q = "UPDATE cart_item SET item_quantity = $new_quantity WHERE idcart = $idcart AND idproduct = $idproduct";
+        $update_r = $conn->query($update_q);
+    } else {
+    //echo "Product ID: $idproduct, Quantity: $quantity";
+
+        $insert_q = "INSERT INTO cart_item (idcart, idproduct, item_quantity) VALUES ($idcart, $idproduct, $quantity)";
+        $insert_r = $conn->query($insert_q);
+        // if ($insert_r) {
+        //     echo "successful";
+        // } 
+    }
+
 }
 
 ?>
@@ -44,7 +97,7 @@ else {
 <div class="col-md-6">
 <?php echo "<img src='";
 
-$imagepath = "./images/$row[image_url].jpg";
+$imagepath = "./images/$row[image_url]";
 
   if (file_exists($imagepath)) {
     echo $imagepath; }
@@ -56,9 +109,9 @@ $imagepath = "./images/$row[image_url].jpg";
 <div class='col-md-6'>
     <h5><?=$row['name']?></h5>
     <p>Price: $<?=$row['price']?></p>
-    <form action='cart.php' method='post'>
+    <form action='product.php' method='post'>
       <input type='number' name='quantity' value='1' min='1' max='<?=$row['stock']?>' placeholder='Quantity' required>
-      <input type='hidden' name='product_id' value='<?=$row['id']?>'>
+      <input type='hidden' name='idproduct' value='<?=$row['idproduct']?>'>
       <input class="btn btn-primary" type='submit' value='Add To Cart'>
     </form>
     <p>Stock: <?=$row['stock']?></p>

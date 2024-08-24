@@ -13,8 +13,19 @@ if (!isset($_SESSION['admin'])) {
 if (isset($_GET['id'])) {
     $idproduct = $_GET['id'];
 
+    //check if product exists
+    $check_q = "SELECT * FROM product WHERE idproduct = $idproduct";
+    $check_r = $conn->query($check_q);
+
+    if ($check_r->num_rows > 0) { 
+
     $query="DELETE FROM product WHERE idproduct = $idproduct"; 
-    $result = $conn->query($query);
+    $result = $conn->query($query);}
+
+    else {
+        echo 'this product does not exist';
+        header ("Location: shop.php");
+    }
 }
 
 else {
