@@ -66,7 +66,7 @@ mysqli_close($conn);
 
 <h2>Log in!</h2>
 
-<p>Don't have an account? Click <a href="register.php">here</a> to create one!</p>
+<p>Don't have an account? Click <a href="signup.php">here</a> to create one!</p>
 
 <!--login form-->
     <form action="login.php" method="post">

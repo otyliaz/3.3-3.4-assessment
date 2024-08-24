@@ -12,6 +12,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="cart.php">My Cart</a>
             </li> 
+            <li class="nav-item">
+                <a class="nav-link" href="register.php">Register</a>
+            </li> 
         </ul>
 
         <ul class="navbar-nav navbar-right align-items-center">
@@ -30,7 +33,7 @@
             else {
                 echo '
                 <li class="nav-item">
-                <a class="nav-link" href="register.php"><i class="fa fa-user-circle" aria-hidden="true"></i>Sign up</a>
+                <a class="nav-link" href="signup.php"><i class="fa fa-user-circle" aria-hidden="true"></i>Sign up</a>
                 </li> 
                 <li class="nav-item">
                 <a class="nav-link" href="login.php"><i class="fa fa-sign-in" aria-hidden="true"></i>Log in</a>

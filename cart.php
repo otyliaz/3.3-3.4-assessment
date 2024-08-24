@@ -26,10 +26,11 @@ $idcart = $row['idcart'];
 $query = "SELECT product.name, product.image_url, product.price, cart_item.item_quantity FROM cart_item JOIN product ON cart_item.idproduct = product.idproduct WHERE cart_item.idcart = $idcart";
 $result = $conn->query($query);
 
-//echo $idcart;
+// if ($result){
+//     //echo "yes";
+// }
 
-while($row = $result->fetch_assoc()) {
-    $data_result[] = $row;}
+//echo $idcart;
 ?>
 
 <div class="container">
@@ -44,11 +45,15 @@ while($row = $result->fetch_assoc()) {
         $total_price = 0;
         $total_items = 0;
 
-        if (empty($data_result)) {
+
+        //while($row = $result->fetch_assoc()) {
+        //    $data_result[] = $row;}
+            
+        if ($result->num_rows == 0) {
             echo '<p>You have nothing in your cart. go to the shop to add some items</p>';
         } else {
 
-            foreach ($data_result as $row) { 
+            while($row = $result->fetch_assoc()) {
                 $item_total = $row['item_quantity'] * $row['price'];
                 $total_price += $item_total;
                 $total_items += $row['item_quantity'];
@@ -99,7 +104,7 @@ while($row = $result->fetch_assoc()) {
         <p><?=$total_items?> items // Subtotal: $<?=$total_price?></p> 
         <hr>
         <p>Total: $<?=$total_price?></p> 
-        <button class="btn btn-success">Proceed to checkout</button>
+        <a class="btn btn-success">Proceed to checkout</a>
     </div>
 </div>
 

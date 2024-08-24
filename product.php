@@ -3,27 +3,6 @@
 session_start();
 require_once ('./includes/connect.inc');
 
-if (isset($_GET['id'])) {
-    $idproduct = $_GET['id'];
-
-    $query="SELECT * FROM product WHERE idproduct = $idproduct"; 
-    $result = $conn->query($query);
-
-    if ($result->num_rows > 0) { //if the idproduct exists
-    $row = $result->fetch_assoc(); }
-
-    else {
-      echo "the product you are looking for does not exist";
-      header ("Location: shop.php");
-    }
-}
-
-else {
-    echo 'the page you are looking for does not exist';
-    header ("Location: shop.php");
-}
-
-
 if (isset($_POST['idproduct'], $_POST['quantity'])) {
     
   if (isset($_SESSION['iduser'])) {
@@ -47,32 +26,52 @@ if (isset($_POST['idproduct'], $_POST['quantity'])) {
 
   }
   else { //if they have a cart already
-      $row = $cart_r->fetch_assoc(); 
-      $idcart = $row['idcart'];
-      }
+    $row = $cart_r->fetch_assoc(); 
+    $idcart = $row['idcart'];
+  }
 
-    $idproduct = $_POST['idproduct'];
-    $quantity = $_POST['quantity'];
+  $idproduct = $_POST['idproduct'];
+  $quantity = $_POST['quantity'];
 
-    //check if the product is already in the user's cart and how many
-    $check_q = "SELECT item_quantity FROM cart_item WHERE idcart = $idcart AND idproduct = $idproduct";
-    $check_r = $conn->query($check_q);
+  //check if the product is already in the user's cart and how many
+  $check_q = "SELECT item_quantity FROM cart_item WHERE idcart = $idcart AND idproduct = $idproduct";
+  $check_r = $conn->query($check_q);
 
-    if ($check_r->num_rows > 0) { //if the product is already in the cart
-        $row = $check_r->fetch_assoc();
-        $new_quantity = $row['item_quantity'] + $quantity;
-        $update_q = "UPDATE cart_item SET item_quantity = $new_quantity WHERE idcart = $idcart AND idproduct = $idproduct";
-        $update_r = $conn->query($update_q);
-    } else {
+  if ($check_r->num_rows > 0) { //if the product is already in the cart
+      $row = $check_r->fetch_assoc();
+      $new_quantity = $row['item_quantity'] + $quantity;
+      $update_q = "UPDATE cart_item SET item_quantity = $new_quantity WHERE idcart = $idcart AND idproduct = $idproduct";
+      $update_r = $conn->query($update_q);
+  } else {
     //echo "Product ID: $idproduct, Quantity: $quantity";
 
-        $insert_q = "INSERT INTO cart_item (idcart, idproduct, item_quantity) VALUES ($idcart, $idproduct, $quantity)";
-        $insert_r = $conn->query($insert_q);
-        // if ($insert_r) {
-        //     echo "successful";
-        // } 
-    }
+    $insert_q = "INSERT INTO cart_item (idcart, idproduct, item_quantity) VALUES ($idcart, $idproduct, $quantity)";
+    $insert_r = $conn->query($insert_q);
+    if ($insert_r) {
+      echo "successful";
+      header ("Location: cart.php");
+    } 
+  }
+}
 
+if (isset($_GET['id'])) {
+  $idproduct = $_GET['id'];
+
+  $query="SELECT * FROM product WHERE idproduct = $idproduct"; 
+  $result = $conn->query($query);
+
+  if ($result->num_rows > 0) { //if the idproduct exists
+  $row = $result->fetch_assoc(); }
+
+  else {
+    echo "the product you are looking for does not exist";
+    // header ("Location: shop.php");
+  }
+}
+
+else {
+  echo 'the page you are looking for does not exist';
+  // header ("Location: shop.php");
 }
 
 ?>
@@ -109,7 +108,7 @@ $imagepath = "./images/$row[image_url]";
 <div class='col-md-6'>
     <h5><?=$row['name']?></h5>
     <p>Price: $<?=$row['price']?></p>
-    <form action='product.php' method='post'>
+    <form action='product.php?id=<?=$idproduct?>' method='post'>
       <input type='number' name='quantity' value='1' min='1' max='<?=$row['stock']?>' placeholder='Quantity' required>
       <input type='hidden' name='idproduct' value='<?=$row['idproduct']?>'>
       <input class="btn btn-primary" type='submit' value='Add To Cart'>

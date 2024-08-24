@@ -1,90 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Sign up - CAS Centenary</title>
+    <title>Register - CAS Centenary</title>
     <?php include ('./includes/basehead.html'); ?>
 </head>
 
 <?php
+session_start();
 require_once("includes/connect.inc");
+include('./includes/nav.php');
+if (isset($_SESSION['iduser'])) {
+    $iduser = $_SESSION['iduser'];
+} else {
+    echo "user does not exist or is not logged in";
+    //header ("Location: login.php");
+}
 
 if(isset($_POST['register'])) {
-    $username = $_POST['username'];
     $fname = $_POST['fname'];
     $lname = $_POST['lname'];
-    $password = $_POST['password'];
     $email = $_POST['email'];
     $grad_year = $_POST['grad_year'];
 
-    // selects to see if username already exists
-    $select = "SELECT `username` FROM user WHERE `username` = ?";
-    
-    if ($stmt = $conn->prepare($select)) {
+    $query = "INSERT INTO `user` (`email`, `fname`, `lname`, `grad_year` ) VALUES (?, ?, ?, ?)";
 
-        // bind parameters
-        $stmt->bind_param("s", $username);
-        $stmt->execute();
+    if ($stmt = $conn->prepare($query)) {
 
-        // store the result
-        $stmt->store_result;
-
-        // if username already exists -> error
-        if ($stmt->num_rows > 0) {
-            $nametaken = 'This username is already taken. Please choose another one.';
-        } 
-        else {
-            if ($_POST['password'] == $_POST['confirm']) {
-                // hash the password
-                $passworden = hash('sha256', $password);
-
-                $query = "INSERT INTO `user` (`username`, `password`, `email`, `fname`, `lname`, `grad_year` ) VALUES (?, ?, ?, ?, ?, ?)";
-
-                if ($stmt2 = $conn->prepare($query)) {
-
-                    //bind parameters
-                    mysqli_stmt_bind_param($stmt2, "sssssi", $username, $passworden, $email, $fname, $lname, $grad_year);
-                    mysqli_stmt_execute($stmt2);
-
-                    //redirect to login after registering
-                    header("Location: login.php");
-                    exit();
-                }
-                else {
-                    echo "Error: " . mysqli_error($conn);
-                }
-            } 
-            else {
-                $confirmerror = "Your passwords don't match, please try again.";
-            }
-        }
-        //close the statement
-        mysqli_stmt_close($stmt);
-    } 
+        //bind parameters
+        mysqli_stmt_bind_param($stmt, "sssi", $email, $fname, $lname, $grad_year);
+        mysqli_stmt_execute($stmt);
+    }
     else {
         echo "Error: " . mysqli_error($conn);
     }
 }
 
-mysqli_close($conn);
+$display_q = "SELECT * FROM event";
+$display_r = $conn->query($display_q);
+
+$conn->close();
 ?>
 
 <body>
 
 <div class="container">
-<h2>Sign up!</h2>
-
-<p>Already have an account? Click <a href="login.php">here</a> to login.</p>
+<h2>This page is to register for an event</h2>
 
 <!--form-->
 <form action="register.php" method="post"> 
-    <div class="form-group">
-        <label for="username">Username:</label>
-        <input class="form-control" type="text" name="username" id="username" placeholder="Type here..." required> 
-        <!-- if the username already exists, then print the error-->
-        <?php if (isset($nametaken)) {
-            echo '<p class="error">' . $nametaken . '</p>';}
-        ?>
-    </div>
     <div class="form-group">
         <label for="fname">First Name:</label>
         <input class="form-control" type="text" name="fname" id="fname" placeholder="Type here..." required>
@@ -98,22 +61,32 @@ mysqli_close($conn);
         <input class="form-control" type="text" name="email" id="email" placeholder="Type here..." required>
     </div>
     <div class="form-group">
-        <label for="password">Password:</label>
-        <input class="form-control" type="password" name="password" id="password" placeholder="Type here..." minlength="8" required>
-    </div>
-    <div class="form-group">
-        <label for="confirm">Confirm passsword:</label>
-        <input class="form-control" type="password" name="confirm" id="confirm" placeholder="Type here..." minlength="8" required> 
-        <!-- if the passwords don't match, then print the error-->
-        <?php if (isset($confirmerror)) {
-            echo '<p class="error">' . $confirmerror . '</p>';}
-        ?>
-    </div>
-    <div class="form-group">
         <label for="grad_year">Graduation year:</label>
         <input class="form-control" type="number" name="grad_year" id="grad_year" placeholder="Type here..." required>
     </div>
-    <input class="btn btn-primary" type="submit" name="register" value="Sign up!">
+
+    <div class="row mt-2">
+
+    <?php
+    if ($display_r->num_rows == 0) {
+        echo '<p>There are no events available at the moment. Check back again later!</p>';
+    } else {
+        while($row = $display_r->fetch_assoc()) {
+        echo "<div class='col-md-4'>
+                <div class='card mb-2'>
+                    <div class='card-body'>
+                        <h5 class='card-title'>$row[title]</h5> 
+                        <p class='card-text'>$row[description]</p>
+                        <input type='checkbox' name='selected_events[]' class='select-event' id='event" . $row['idevent'] ."' value='" . $row['idevent'] . "'>
+                        <label for='event" . $row['idevent'] . "' class='btn btn-primary select-btn'>Select</label>
+                    </div>
+                </div>
+            </div>";
+        }
+    }
+    ?>
+    </div> <!--class="row"-->
+    <input class="btn btn-primary" type="submit" name="register" value="Register!">
 </form>
 
 

@@ -81,9 +81,9 @@ else {
         <div class='card mb-2'>
           <img src='";
 
-          if (file_exists($imagepath)) {
-            echo $imagepath; }
-          else {echo "./images/no_img.png";}
+          if (!file_exists($imagepath) || empty($row['image_url'])) {
+            echo "./images/no_img.png"; }
+          else {echo $imagepath;}
           
           echo "' class='card-img-top' alt='$row[name]'>
           <div class='card-body'>
