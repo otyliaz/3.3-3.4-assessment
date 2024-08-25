@@ -1,5 +1,5 @@
 
-<nav class="navbar navbar-expand-sm bg-light">
+<nav class="navbar navbar-expand-sm mb-2">
     <div class="container-fluid">   
 
         <ul class="navbar-nav align-items-center">
@@ -7,7 +7,10 @@
                 <a class="navbar-brand" href="index.php"><img id="logo" src="./images/logo.png" alt="CAS 100" height="60px" width= "60px"></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="shop.php">Shop</a>  
+                <a class="nav-link" href="index.php">Home</a>  
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="shop.php">Shop</a>  
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="cart.php">My Cart</a>
@@ -23,20 +26,20 @@
                 //echo '<i class="fa fa-user-circle" aria-hidden="true"></i>'.$_SESSION['username'];
                 echo '
                 <li class="nav-item">
-                <a class="nav-link"><i class="fa fa-user-circle" aria-hidden="true"></i>'.$_SESSION['username'].'</a>
+                <a id="nav-username"><i class="fa fa-user-circle" aria-hidden="true"></i>'.$_SESSION['username'].'</a>
                 </li> 
-                <li class="btn btn-danger">
-                <a class="nav-link" href="logout.php"><i class="fa fa-sign-out" aria-hidden="true"></i>Log out</a>
+                <li class="nav-item">
+                <a class="nav-link btn ms-2" id="logout-link" href="logout.php"><i class="fa fa-sign-out" aria-hidden="true"></i>Log out</a>
                 </li>
                 ';
             }
             else {
                 echo '
                 <li class="nav-item">
-                <a class="nav-link" href="signup.php"><i class="fa fa-user-circle" aria-hidden="true"></i>Sign up</a>
+                <a class="nav-link btn" id="signup-link" href="signup.php"><i class="fa fa-user-circle" aria-hidden="true"></i>Sign up</a>
                 </li> 
                 <li class="nav-item">
-                <a class="nav-link" href="login.php"><i class="fa fa-sign-in" aria-hidden="true"></i>Log in</a>
+                <a class="nav-link btn ms-2" id="login-link" href="login.php"><i class="fa fa-sign-in" aria-hidden="true"></i>Log in</a>
                 </li>';
             } 
             ?>
@@ -45,3 +48,15 @@
         
     </div>
 </nav>
+
+<script>
+$(document).ready(function() {
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 50) { // Adjust the value as needed
+                $('.navbar').addClass('navbar-shadow');
+            } else {
+                $('.navbar').removeClass('navbar-shadow');
+            }
+        });
+    });
+</script>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <?php include './includes/basehead.html'; ?>
+    <title>404 Not Found</title>
+</head>
+<body>
+    <?php include './includes/nav.php';?>
+    <div class="container text-center">
+        <h1 class="my-3">404 Page Not Found</h1>
+        <p class="text-center">It looks like the page you are looking for does not exist.</p>
+        <a class="btn button-return" href="index.php">Return to home</a>
+    </div>
+
+    <?php include './includes/footer.html';?>
+</body>
+</html>

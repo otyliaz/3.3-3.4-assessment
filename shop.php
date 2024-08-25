@@ -2,32 +2,28 @@
 <html lang="en">
   <head>
     <title>Shop - CAS Centenary</title>
-    <?php include ('./includes/basehead.html'); ?>
+    <?php include './includes/basehead.html'; ?>
   </head>
 
 <body>
 
 <?php
 session_start();
-require_once ('./includes/connect.inc');
+require_once './includes/connect.inc';
+include './includes/nav.php'?>
 
-// if (!isset($_SESSION['admin'])){
-//   // isn't admin, redirect them to a different page
-//   header("Location: index.php");
-// }
+<div class="container mb-2">
 
-include('./includes/nav.php')?>
+<h1 class="my-3 text-center">Shop CAS merchandise:</h1>
 
-<div class="container">
+<div class="row my-2">
 
-<h1>Shop CAS merchandise:</h1>
-
-<div class="row">
-
-<form action="shop.php" method="get" class="d-flex">
-    <input type="search" class="form-control" name="search" placeholder="Search" aria-label="Search"/>
-    <button class="btn btn-outline-success" type="submit">Search</button>
-</form>
+  <form action="shop.php" method="get" class="d-flex mx-auto" id="search-bar">
+      <input type="search" class="form-control" name="search" placeholder="Search" aria-label="Search"/>
+      <button class="btn" id="search-button" type="submit">
+        <i class="fas fa-search"></i>
+      </button>
+  </form>
 
 </div>
 
@@ -47,11 +43,6 @@ if (isset($_GET['search'])){
 
 //echo $query;
 
-  
-if (isset($_SESSION['admin'])) {
-  echo "<a class='btn btn-danger' href='addproduct.php'>Add another product</a>";
-}
-
 $result = $conn->query($query);
 $rowcount = $result->num_rows;
 
@@ -59,26 +50,34 @@ while($row = $result->fetch_assoc()) {
   $data_result[] = $row;
 }
 
-echo '<p>Showing '.$rowcount.' result(s)';
+echo '<p class="text-center mb-0"> Showing '.$rowcount.' result(s)';
 
 if (!empty($search_term)) {
   // if search_term is not null or whitespace,
   echo' for "'.$search_term.'"';}
 echo ':</p>';
 
+
+if (isset($_SESSION['admin'])) {
+  echo "
+  <div class='text-center mt-2'>
+    <a class='btn button-red' href='addproduct.php'>Add product</a>
+  </div>";
+}
+
 if (empty($data_result)) {
   echo '<p>Sorry! No results found for "'.$search_term.'. Check your spelling or try a different key word.</p>';
 }
 
 else {
-  echo "<div class='row'>";
+  echo "<div class='row mt-3'>";
 
   foreach ($data_result as $row) {
     $imagepath = "./images/$row[image_url]";
       echo "
       <div class='col-md-4'>
       <a href='product.php?id=$row[idproduct]' class='text-decoration-none'>
-        <div class='card mb-2'>
+        <div class='card mb-3'>
           <img src='";
 
           if (!file_exists($imagepath) || empty($row['image_url'])) {
@@ -88,9 +87,10 @@ else {
           echo "' class='card-img-top' alt='$row[name]'>
           <div class='card-body'>
             <h5 class='card-title'>$row[name]</h5>
-            <p class='card-text'>Description: $row[description]</p>
-            <p class='card-text'>Price: $row[price]</p>
-            <p class='card-text'>Stock: $row[stock]</p>";
+            <div class='d-flex justify-content-between'>
+              <p class='fw-bold mb-0' id='item-price'>$$row[price]</p>
+              <p class='card-text text-end mb-0'>$row[stock] in stock</p>
+            </div>";
             // //if the user is an admin, show an EDIT button.
             // if (isset($_SESSION['admin']))
             // {echo "<button class='btn btn-danger'>EDIT</button>";}
@@ -106,5 +106,8 @@ $conn->close();
 ?>
 
 </div>
+
+<?php include './includes/footer.html'?>
+
 </body>
 </html>

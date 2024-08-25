@@ -1,7 +1,7 @@
 
 <?php
 session_start();
-require_once ('./includes/connect.inc');
+require_once './includes/connect.inc';
 
 if (isset($_POST['idproduct'], $_POST['quantity'])) {
     
@@ -64,14 +64,17 @@ if (isset($_GET['id'])) {
   $row = $result->fetch_assoc(); }
 
   else {
-    echo "the product you are looking for does not exist";
+    header("HTTP/1.0 404 Not Found");
+    include '404.php';
+    exit();
     // header ("Location: shop.php");
   }
 }
 
 else {
-  echo 'the page you are looking for does not exist';
-  // header ("Location: shop.php");
+  header("HTTP/1.0 404 Not Found");
+    include '404.php';
+    exit();
 }
 
 ?>
@@ -82,12 +85,12 @@ else {
     <?php
     if ($row) { //if row (product id) exists,
     echo "<title> $row[name] - CAS Centenary</title>";}
-    include ('./includes/basehead.html'); ?>
+    include './includes/basehead.html'; ?>
   </head>
 
 
 <body>
-<?php include('./includes/nav.php');?>
+<?php //include './includes/nav.php';?>
 
 <div class="container">
 

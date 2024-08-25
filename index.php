@@ -2,18 +2,19 @@
 <html lang="en">
 <head>
     <title>Home - CAS Centenary</title>
-    <?php include ('./includes/basehead.html'); ?>
+    <?php include './includes/basehead.html'; ?>
 </head>
 <body>
     
 <?php 
 session_start();
-require_once('./includes/connect.inc');
-include('./includes/nav.php');
+require_once './includes/connect.inc';
+include './includes/nav.php';
 //echo $_SESSION['admin'];
 ?>
 <div class="container">
-    <div class="row">
+    <h1 class="m-3 text-center">Welcome to the CAS Centenary Website!</h1>
+    <div class="row py-2 align-items-center">
 
         <div class="col-md-6">
             <div id="homeCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -48,26 +49,36 @@ include('./includes/nav.php');
         </div>
 
         <div class="col-md-6">
-            <p>Join us in our celebrations for 100 years of quality Christian education at Christchurch Adventist School!</p>
-            <p>John 1:5 "The light shines in the darkness, and the darkness can never extinguish it."</p>
-            <p>Friday 25th to Sunday 27th of April, 2025. Open to all CAS Alumni</p>
+            <p>Join us in our celebrations for 100 years of quality Christian education at Christchurch Adventist School! On this website, you can register for events at the reunion and buy CAS merchandise.</p>
+            <p>Date: Friday 25th to Sunday 27th of April, 2025.</p>
+            <p>Events open to all CAS Alumni.</p>
+            
+            <?php
+            if (isset($_SESSION['iduser'])) {
+                $iduser = $_SESSION['iduser'];
+                echo "<p>Welcome back! Book your spot for the reunion.</p>";
+
+            } else {
+                echo "<p>Create an account to book one of the limited spaces available at the reunion.</p>";
+            }
+            ?>
+
+            
+            <!-- <p class="mb-0 fst-italic text-center">"The light shines in the darkness, and the darkness can never extinguish it."</p>
+            <p class="text-center">John 1:5</p> -->
+                
+            <a class="btn button-red" href="register.php">Register Now</a>
         </div>
 
     </div>
 
-    <div class="row">
+    <!-- <div class="row">
 
-        <?php
-        if (isset($_SESSION['iduser'])) {
-            $iduser = $_SESSION['iduser'];
-
-        } else {
-            echo "<p>Create an account to book one of the limited spaces available at the reunion.</p>";
-        }
-        ?>
-
-    </div>
+    </div> -->
 </div>
+
+
+<?php include './includes/footer.html'?>
 </body>
 </html>
 

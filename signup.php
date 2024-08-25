@@ -10,11 +10,7 @@ require_once("includes/connect.inc");
 
 if(isset($_POST['signup'])) {
     $username = $_POST['username'];
-    $fname = $_POST['fname'];
-    $lname = $_POST['lname'];
     $password = $_POST['password'];
-    $email = $_POST['email'];
-    $grad_year = $_POST['grad_year'];
 
     // selects to see if username already exists
     $select = "SELECT `username` FROM user WHERE `username` = ?";
@@ -26,7 +22,7 @@ if(isset($_POST['signup'])) {
         $stmt->execute();
 
         // store the result
-        $stmt->store_result;
+        $stmt->store_result();
 
         // if username already exists -> error
         if ($stmt->num_rows > 0) {
@@ -37,12 +33,12 @@ if(isset($_POST['signup'])) {
                 // hash the password
                 $passworden = hash('sha256', $password);
 
-                $query = "INSERT INTO `user` (`username`, `password`, `email`, `fname`, `lname`, `grad_year` ) VALUES (?, ?, ?, ?, ?, ?)";
+                $query = "INSERT INTO `user` (`username`, `password`) VALUES (?, ?)";
 
                 if ($stmt2 = $conn->prepare($query)) {
 
                     //bind parameters
-                    mysqli_stmt_bind_param($stmt2, "sssssi", $username, $passworden, $email, $fname, $lname, $grad_year);
+                    mysqli_stmt_bind_param($stmt2, "ss", $username, $passworden);
                     mysqli_stmt_execute($stmt2);
 
                     //redirect to login after signing up
@@ -86,18 +82,6 @@ mysqli_close($conn);
         ?>
     </div>
     <div class="form-group">
-        <label for="fname">First Name:</label>
-        <input class="form-control" type="text" name="fname" id="fname" placeholder="Type here..." required>
-    </div>
-    <div class="form-group">
-        <label for="lname">Last Name:</label>
-        <input class="form-control" type="text" name="lname" id="lname" placeholder="Type here..." required>
-    </div>
-    <div class="form-group">
-        <label for="email">Email:</label>
-        <input class="form-control" type="text" name="email" id="email" placeholder="Type here..." required>
-    </div>
-    <div class="form-group">
         <label for="password">Password:</label>
         <input class="form-control" type="password" name="password" id="password" placeholder="Type here..." minlength="8" required>
     </div>
@@ -108,10 +92,6 @@ mysqli_close($conn);
         <?php if (isset($confirmerror)) {
             echo '<p class="error">' . $confirmerror . '</p>';}
         ?>
-    </div>
-    <div class="form-group">
-        <label for="grad_year">Graduation year:</label>
-        <input class="form-control" type="number" name="grad_year" id="grad_year" placeholder="Type here..." required>
     </div>
     <input class="btn btn-primary" type="submit" name="signup" value="Sign up!">
 </form>

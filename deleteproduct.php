@@ -20,9 +20,16 @@ if (isset($_GET['id'])) {
     if ($check_r->num_rows > 0) { 
 
     $query="DELETE FROM product WHERE idproduct = $idproduct"; 
-    $result = $conn->query($query);}
+    $result = $conn->query($query);
 
-    else {
+        if ($result){
+            header ("Location: shop.php");
+            
+        } else {
+            echo 'There was an error in executing the query. Please try again later.';
+        }
+        
+    } else {
         echo 'this product does not exist';
         header ("Location: shop.php");
     }

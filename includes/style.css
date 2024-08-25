@@ -1,13 +1,158 @@
 /* #193067
 #DCE1E9 */
 
-
-a .card:hover {
-    text-decoration: underline;
-    border: 1px solid;
-    box-shadow: 0 0 10px #000000;
+.container {
+    padding-top: 80px;
+    flex: 1;
 }
 
 img {
     max-width: 100%;
+    object-fit: cover;
+}
+
+
+p {
+    text-align: justify;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* buttons */
+.button-red {
+    background-color: #CA2B30;
+    color: white;
+    box-shadow: 0 2px 6px #0000001a;
+}
+
+.button-red:hover {
+    background-color: #972024;
+    color: white;
+}
+
+.button-return {
+    background-color: #193067;
+    color: white;
+    box-shadow: 0 2px 6px #0000001a;
+}
+
+.button-return:hover {
+    background-color: #142752;
+    color: white;
+}
+
+/* index.php */
+.carousel-item {
+    height: 300px; /* fixing height of carousel photos */
+}
+
+@media (max-width: 991px) {
+.carousel-item {
+    height: 250px; /* smaller height of carousel for smaller screens */
+}
+}
+
+/* shop stuff */
+#search-button {
+   background-color: #095D36;
+   color: #D9FCEC;
+   border-top-left-radius: 0;
+   border-bottom-left-radius: 0;
+   border-left: none; 
+   transition: all .1s ease-in-out; 
+}
+
+#search-bar {
+    max-width: 600px;
+    margin: 0;
+}
+
+#search-bar .form-control {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+#search-button:hover {
+    box-shadow: 0 0 10px #095D36;
+}
+
+a .card:hover {
+    border: 1px solid;
+    box-shadow: 0 0 10px #000000;
+}
+
+.card:hover .card-title {
+    text-decoration: underline;
+}
+
+.card-img-top {
+    object-fit: cover;
+    height: 300px; /* Set a fixed height for images */
+}
+
+#item-price {
+    color: #193067;
+    font-size: larger;
+}
+
+/* nav bar stuff */
+/* shadow under nav bar on scroll */
+.navbar-shadow {
+    box-shadow: 0 4px 6px #0000001a;
+}
+
+.navbar {
+    background-color: #EFF2FB; 
+    /*box-shadow: 0 2px 6px #0000001a;*/
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    position: fixed;
+    width: 100%; 
+    z-index: 2;
+    top: 0;
+}
+
+.nav-link {
+    color: #182E63;
+}
+
+.nav-link:hover {
+    color: #CA2B30;
+    text-decoration: underline;
+}
+
+#nav-username {
+    color: #182E63;
+}
+
+#signup-link, #logout-link {
+    background-color: #193067;
+    color: #EFF2FB;
+}
+
+#logo {
+    transition: all .2s ease-in-out; 
+}
+
+#logo:hover {
+    transform: scale(1.05);     
+}
+
+i {
+    margin-right: 0.25rem;
+}
+/* ------------- */
+
+footer {
+    background-color: #EFF2FB;
+    color: #193067;
+    width: 100%;
+    height: 2.5rem; 
+    justify-content: center;
+    align-items: center;
+    display: flex;              
 }
