@@ -29,7 +29,7 @@
                 <a id="nav-username"><i class="fa fa-user-circle" aria-hidden="true"></i>'.$_SESSION['username'].'</a>
                 </li> 
                 <li class="nav-item">
-                <a class="nav-link btn ms-2" id="logout-link" href="logout.php"><i class="fa fa-sign-out" aria-hidden="true"></i>Log out</a>
+                <a class="nav-link btn ms-3" id="logout-link" href="logout.php"><i class="fa fa-sign-out" aria-hidden="true"></i>Log out</a>
                 </li>
                 ';
             }
@@ -49,10 +49,10 @@
     </div>
 </nav>
 
-<script>
+<script defer> //jquery for navbar shadow
 $(document).ready(function() {
         $(window).scroll(function() {
-            if ($(this).scrollTop() > 50) { // Adjust the value as needed
+            if ($(this).scrollTop() > 60) { //if they scroll more than 60px, add shadow
                 $('.navbar').addClass('navbar-shadow');
             } else {
                 $('.navbar').removeClass('navbar-shadow');

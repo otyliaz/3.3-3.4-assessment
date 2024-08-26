@@ -20,7 +20,7 @@ include './includes/nav.php'?>
 
   <form action="shop.php" method="get" class="d-flex mx-auto" id="search-bar">
       <input type="search" class="form-control" name="search" placeholder="Search" aria-label="Search"/>
-      <button class="btn" id="search-button" type="submit">
+      <button class="btn btn-green" id="search-button" type="submit">
         <i class="fas fa-search"></i>
       </button>
   </form>
@@ -50,7 +50,7 @@ while($row = $result->fetch_assoc()) {
   $data_result[] = $row;
 }
 
-echo '<p class="text-center mb-0"> Showing '.$rowcount.' result(s)';
+echo '<p class="text-center"> Showing '.$rowcount.' result(s)';
 
 if (!empty($search_term)) {
   // if search_term is not null or whitespace,
@@ -61,19 +61,19 @@ echo ':</p>';
 if (isset($_SESSION['admin'])) {
   echo "
   <div class='text-center mt-2'>
-    <a class='btn button-red' href='addproduct.php'>Add product</a>
+    <a class='btn btn-red' href='addproduct.php'>Add product</a>
   </div>";
 }
 
 if (empty($data_result)) {
-  echo '<p>Sorry! No results found for "'.$search_term.'. Check your spelling or try a different key word.</p>';
+  echo '<p class="text-center">Sorry! No results found for "'.$search_term.'". Check your spelling or try a different key word.</p>';
 }
 
 else {
   echo "<div class='row mt-3'>";
 
   foreach ($data_result as $row) {
-    $imagepath = "./images/$row[image_url]";
+    $imagepath = "./item_images/$row[image_url]";
       echo "
       <div class='col-md-4'>
       <a href='product.php?id=$row[idproduct]' class='text-decoration-none'>
@@ -81,15 +81,15 @@ else {
           <img src='";
 
           if (!file_exists($imagepath) || empty($row['image_url'])) {
-            echo "./images/no_img.png"; }
+            echo "./item_images/no_img.png"; }
           else {echo $imagepath;}
           
           echo "' class='card-img-top' alt='$row[name]'>
           <div class='card-body'>
             <h5 class='card-title'>$row[name]</h5>
             <div class='d-flex justify-content-between'>
-              <p class='fw-bold mb-0' id='item-price'>$$row[price]</p>
-              <p class='card-text text-end mb-0'>$row[stock] in stock</p>
+              <p class='fw-bold' id='item-price'>$$row[price]</p>
+              <p class='card-text text-end'>$row[stock] in stock</p>
             </div>";
             // //if the user is an admin, show an EDIT button.
             // if (isset($_SESSION['admin']))

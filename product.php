@@ -42,13 +42,15 @@ if (isset($_POST['idproduct'], $_POST['quantity'])) {
       $new_quantity = $row['item_quantity'] + $quantity;
       $update_q = "UPDATE cart_item SET item_quantity = $new_quantity WHERE idcart = $idcart AND idproduct = $idproduct";
       $update_r = $conn->query($update_q);
+      if ($update_r) {
+        header ("Location: cart.php");
+      } 
   } else {
     //echo "Product ID: $idproduct, Quantity: $quantity";
 
     $insert_q = "INSERT INTO cart_item (idcart, idproduct, item_quantity) VALUES ($idcart, $idproduct, $quantity)";
     $insert_r = $conn->query($insert_q);
     if ($insert_r) {
-      echo "successful";
       header ("Location: cart.php");
     } 
   }
@@ -90,45 +92,63 @@ else {
 
 
 <body>
-<?php //include './includes/nav.php';?>
+<?php include './includes/nav.php';?>
 
 <div class="container">
 
 <div class="row">
 
 <div class="col-md-6">
-<?php echo "<img src='";
+<?php echo "<img class='my-3 mt-4 img-product' src='";
 
-$imagepath = "./images/$row[image_url]";
+$imagepath = "./item_images/$row[image_url]";
 
   if (file_exists($imagepath)) {
     echo $imagepath; }
-  else {echo "./images/no_img.png";}
+  else {echo "./item_images/no_img.png";}
   
   echo "' alt='$row[name]'>" ?>
 </div>
 
 <div class='col-md-6'>
-    <h5><?=$row['name']?></h5>
-    <p>Price: $<?=$row['price']?></p>
-    <form action='product.php?id=<?=$idproduct?>' method='post'>
-      <input type='number' name='quantity' value='1' min='1' max='<?=$row['stock']?>' placeholder='Quantity' required>
-      <input type='hidden' name='idproduct' value='<?=$row['idproduct']?>'>
-      <input class="btn btn-primary" type='submit' value='Add To Cart'>
-    </form>
-    <p>Stock: <?=$row['stock']?></p>
-    <p>Description: <?=$row['description']?></p>
-    
-    <?php
-    //if the user is an admin, show an EDIT button.
-    if (isset($_SESSION['admin']))
-    {echo "<a class='btn btn-danger' href='editproduct.php?id=$row[idproduct]'>EDIT PRODUCT</a>";
-    echo "<a class='btn btn-danger' href='deleteproduct.php?id=$row[idproduct]'>DELETE PRODUCT</a>";} ?>
+  <h2 class="mb-3 mt-5"><?=$row['name']?></h2>
+  <h4 class="product-price">$<?=$row['price']?></h4>
+  <p class="product-description mt-3"><?=$row['description']?></p>
+  <p><?=$row['stock']?> in stock.</p>
+  <form action='product.php?id=<?=$idproduct?>' method='post' class="d-flex my-4">
+    <div class="qty-group">
+      <p class="m-0 text-center text-muted">Quantity</p>
+      <div class='d-flex'>
+        <button class='btn btn-decrease px-2' >
+            <i class='fas fa-minus'></i>
+        </button>
+
+        <input min='1' max='<?=$row['stock']?>' name='quantity' value='1' type='number' class='quantity-input'>
+        <input type='hidden' name='idproduct' value='$row[idproduct]'>
+        
+        <button class='btn btn-increase px-2'>
+            <i class='fas fa-plus'></i>
+        </button>
+      </div>  
+    </div>
+    <button type='submit' class="btn btn-green ms-5"><i class="fa fa-shopping-cart" aria-hidden="true"></i>Add to cart</button>
+    <input type='hidden' name='idproduct' value='<?=$row['idproduct']?>'>
+  </form>
+
+  <?php
+  if (isset($_SESSION['admin'])) {
+      echo "<a class='btn btn-red mt-3 me-2' href='editproduct.php?id=$row[idproduct]'>Edit product</a>";
+      echo "<a class='btn btn-red mt-3' href='deleteproduct.php?id=$row[idproduct]'>Delete product</a>";
+  } ?>
 </div>
             
 
 </div> <!--closing row div-->
 </div> <!--closing container div-->
+
+<?php include './includes/footer.html'?>
+
+<script src="quantity-buttons.js"></script>
 </body>
 </html>
 
