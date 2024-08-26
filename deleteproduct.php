@@ -27,15 +27,20 @@ if (isset($_GET['id'])) {
             
         } else {
             echo 'There was an error in executing the query. Please try again later.';
+            header ("Location: shop.php");
+            exit();
         }
         
     } else {
-        echo 'this product does not exist';
+        echo 'The product does not exist.';
         header ("Location: shop.php");
+        exit();
     }
 }
 
 else {
-    echo 'the page you are looking for does not exist'; //redirect to error page
+    echo 'The page you are looking for does not exist.';
+    header ("Location: shop.php");
+    exit();
 }
  

@@ -193,9 +193,25 @@ i {
     flex-direction: column;
 }
 
+#qty-label {
+    font-size: smaller;
+}
+
 .product-price {
     color: #193067;
     font-weight: bold;
+}
+
+/* update product quantity button */
+.update-link {
+    background: none;
+    border: none;
+    color: #CA2B30; 
+    text-decoration: underline;
+}
+
+.update-link:hover {
+    color: #0056b3; /* Darker shade on hover */
 }
 
 /* cart  */

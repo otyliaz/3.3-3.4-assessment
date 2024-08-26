@@ -124,7 +124,7 @@ $imagepath = "./item_images/$row[image_url]";
         </button>
 
         <input min='1' max='<?=$row['stock']?>' name='quantity' value='1' type='number' class='quantity-input'>
-        <input type='hidden' name='idproduct' value='$row[idproduct]'>
+        <input type='hidden' name='idproduct' value='<?=$row['idproduct']?>'>
         
         <button class='btn btn-increase px-2'>
             <i class='fas fa-plus'></i>
@@ -148,7 +148,8 @@ $imagepath = "./item_images/$row[image_url]";
 
 <?php include './includes/footer.html'?>
 
-<script src="quantity-buttons.js"></script>
+<script src="quantity-buttons.js">
+</script>
 </body>
 </html>
 

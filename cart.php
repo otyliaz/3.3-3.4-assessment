@@ -13,6 +13,7 @@ include('./includes/nav.php');
 if (isset($_SESSION['iduser'])) {
     $iduser = $_SESSION['iduser'];
 } else {
+    //do this
     echo "sign in to you account to add items to cart! no thanks, i want to continue browsing";
     //exit();
     //header ("Location: login.php");
@@ -23,7 +24,9 @@ $cart_r = $conn->query($cart_q);
 $row = $cart_r->fetch_assoc();
 $idcart = $row['idcart'];
 
-$query = "SELECT product.idproduct, product.stock, product.name, product.image_url, product.price, cart_item.item_quantity FROM cart_item JOIN product ON cart_item.idproduct = product.idproduct WHERE cart_item.idcart = $idcart";
+$query = "SELECT product.idproduct, product.stock, product.name, product.image_url, product.price, cart_item.item_quantity 
+FROM cart_item JOIN product 
+ON cart_item.idproduct = product.idproduct WHERE cart_item.idcart = $idcart";
 $result = $conn->query($query);
 
 // if ($result){
@@ -50,7 +53,7 @@ $result = $conn->query($query);
         //    $data_result[] = $row;}
             
         if ($result->num_rows == 0) {
-            echo '<p>You have nothing in your cart. go to the shop to add some items</p>';
+            echo '<p>You currently have nothing in your cart. Go to the shop to add some items!</p>';
         } else {
 
             while($row = $result->fetch_assoc()) {
@@ -73,28 +76,33 @@ $result = $conn->query($query);
                         <h6>$row[name]</h6>
                         <p class='mb-0'>$$row[price]</p>
                     </div>
-                    <div class='col-md-3 d-flex'>
-                    <form class='form-item-quantity' action='update_cart.php'>
-                        <div class='d-flex'>
-                            <button class='btn btn-decrease px-2' >
-                                <i class='fas fa-minus'></i>
-                            </button>
+                    <div class='col-md-3 d-flex justify-content-center'>
+                    <form class='form-item-quantity' action='update_cart.php' method='post'>
+                        <div class='qty-group'>
+                            <p class='m-0 text-center text-muted' id='qty-label'>Quantity</p>
+                            <div class='d-flex'>
+                                <button class='btn btn-decrease px-2' >
+                                    <i class='fas fa-minus'></i>
+                                </button>
 
-                            <input min='0' max='$row[stock]' name='quantity' value='$row[item_quantity]' type='number' class='quantity-input form-control'>
-                            <input type='hidden' name='idproduct' value='$row[idproduct]'>
-                            
-                            <button class='btn btn-increase px-2'>
-                                <i class='fas fa-plus'></i>
-                            </button>
-                        </div>  
-                        <input class='' type='submit' value='Update Quantity'>
+                                <input min='1' max='$row[stock]' name='quantity' value='$row[item_quantity]' type='number' class='quantity-input p-0'>
+                                <input type='hidden' name='idproduct' value='$row[idproduct]'>
+                                
+                                <button class='btn btn-increase px-2'>
+                                    <i class='fas fa-plus'></i>
+                                </button>
+                            </div>  
+                        </div>
+                        <div class='text-center'>
+                            <input class='update-link m-0' type='submit' value='Update'>
+                        </div>
                     </form>
                     </div>
                     <div class='col-md-3'>
                         <h6 class='mb-0'>$$item_total</h6>
                     </div>
                     <div class='col-md-1 text-end'>
-                        <a href='delete_cart_item.php' class='delete-icon'><i class='fas fa-trash'></i></a>
+                        <a href='delete_cart_item.php?id=$row[idproduct]' class='delete-icon'><i class='fas fa-trash'></i></a>
                     </div>
                 </div> <!--closing class='row'-->";
                 //echo '<img src='./images/$row[image_url].jpg' alt='$row[name]'>';
@@ -104,7 +112,7 @@ $result = $conn->query($query);
         ?>
 
     </div> <!--closing class="col-md-8"-->
-        
+
     <div class="col-md-4">
         <h2 class="m-3 pt-2 mt-5 text-center">Order Summary</h2>
         <div class="d-flex justify-content-between">
