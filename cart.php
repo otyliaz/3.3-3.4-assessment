@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <title>Your Cart - CAS Centenary</title>
-    <?php include ('./includes/basehead.html'); ?>
+    <?php include './includes/basehead.html'; ?>
 </head>
 
 <body>
 <?php 
 session_start();
-require_once('./includes/connect.inc');
-include('./includes/nav.php');
+require_once'./includes/connect.inc';
+include'./includes/nav.php';
 if (isset($_SESSION['iduser'])) {
     $iduser = $_SESSION['iduser'];
 } else {
@@ -19,10 +19,15 @@ if (isset($_SESSION['iduser'])) {
     //header ("Location: login.php");
 }
 
-$cart_q = "SELECT idcart FROM cart WHERE iduser = $iduser";
+$cart_q = "SELECT idcart, ordered FROM cart WHERE iduser = $iduser";
 $cart_r = $conn->query($cart_q);
 $row = $cart_r->fetch_assoc();
 $idcart = $row['idcart'];
+
+if ($row['ordered'] == 1) {
+    header ("Location: checkout.php?idcart=$idcart");
+    exit();
+}
 
 $query = "SELECT product.idproduct, product.stock, product.name, product.image_url, product.price, cart_item.item_quantity 
 FROM cart_item JOIN product 
@@ -47,7 +52,6 @@ $result = $conn->query($query);
         <?php
         $total_price = 0;
         $total_items = 0;
-
 
         //while($row = $result->fetch_assoc()) {
         //    $data_result[] = $row;}
@@ -77,29 +81,24 @@ $result = $conn->query($query);
                         <p class='mb-0'>$$row[price]</p>
                     </div>
                     <div class='col-md-3 d-flex justify-content-center'>
-                    <form class='form-item-quantity' action='update_cart.php' method='post'>
-                        <div class='qty-group'>
-                            <p class='m-0 text-center text-muted' id='qty-label'>Quantity</p>
-                            <div class='d-flex'>
-                                <button class='btn btn-decrease px-2' >
-                                    <i class='fas fa-minus'></i>
-                                </button>
+                    <form class='qty-group' action='update_cart.php' method='post'>
+                        <p class='m-0 text-center text-muted' id='qty-label'>Quantity</p>
+                        <div class='d-flex'>
+                            <button class='btn btn-decrease px-2' >
+                                <i class='fas fa-minus'></i>
+                            </button>
 
-                                <input min='1' max='$row[stock]' name='quantity' value='$row[item_quantity]' type='number' class='quantity-input p-0'>
-                                <input type='hidden' name='idproduct' value='$row[idproduct]'>
-                                
-                                <button class='btn btn-increase px-2'>
-                                    <i class='fas fa-plus'></i>
-                                </button>
-                            </div>  
-                        </div>
-                        <div class='text-center'>
-                            <input class='update-link m-0' type='submit' value='Update'>
-                        </div>
+                            <input min='1' max='$row[stock]' name='quantity' value='$row[item_quantity]' type='number' class='quantity-input p-0'>
+                            <input type='hidden' name='idproduct' value='$row[idproduct]'>
+                            
+                            <button class='btn btn-increase px-2'>
+                                <i class='fas fa-plus'></i>
+                            </button>
+                        </div>  
                     </form>
                     </div>
                     <div class='col-md-3'>
-                        <h6 class='mb-0'>$$item_total</h6>
+                        <h6 class='mb-0 text-center'>$" . number_format($item_total, 2) . "</h6>
                     </div>
                     <div class='col-md-1 text-end'>
                         <a href='delete_cart_item.php?id=$row[idproduct]' class='delete-icon'><i class='fas fa-trash'></i></a>
@@ -117,14 +116,14 @@ $result = $conn->query($query);
         <h2 class="m-3 pt-2 mt-5 text-center">Order Summary</h2>
         <div class="d-flex justify-content-between">
             <p class="mb-0"><?=$total_items?> items</p>
-            <p class="text-end mb-0">$<?=$total_price?></p> 
+            <p class="text-end mb-0">$<?=number_format($total_price, 2)?></p> 
         </div>
         <hr>
         <div class="d-flex justify-content-between">
-            <h5 class=>Total</>
-            <h5 class="text-end">$<?=$total_price?></> 
+            <h5>Total</h5>
+            <h5 class="text-end">$<?=number_format($total_price, 2)?></h5>
         </div>
-        <a class="btn btn-success">Proceed to checkout</a>
+        <a class="btn btn-green mt-3" href="checkout.php?idcart=<?=$idcart?>">Place Order</a>
     </div>
 
     
@@ -132,6 +131,31 @@ $result = $conn->query($query);
 
 </div> <!--closing class="container"-->
 
-<script src="quantity-buttons.js"></script>
+<script>
+$(document).ready(function() {
+    //increase quantity of item on click
+    $('.btn-increase').on('click', function(event) {
+        event.preventDefault(); //prevents the form from submitting
+        let $input = $(this).siblings('.quantity-input');
+        let currentValue = parseInt($input.val());
+        $input.val(currentValue + 1);
+
+        //sumbits form
+        $(this).closest('form').submit();
+
+    });
+
+    $('.btn-decrease').on('click', function(event) {
+        event.preventDefault();
+        let $input = $(this).siblings('.quantity-input');
+        let currentValue = parseInt($input.val());
+        if (currentValue > 1) {
+            $input.val(currentValue - 1);
+        }
+
+        //$(this).closest('form').submit();
+    });
+});
+</script>
 </body>
 </html>

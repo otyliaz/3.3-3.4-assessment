@@ -63,13 +63,13 @@ I didn't apply these styles to all buttons because of the quantity selector butt
     color: white;
 }
 
-.button-return {  /* return to home */
+.btn-blue {  
     background-color: #193067;
     color: white;
     box-shadow: 0 2px 6px #0000001a;
 }
 
-.button-return:hover {
+.btn-blue:hover {
     background-color: #142752;
     color: white;
 }

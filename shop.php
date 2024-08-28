@@ -66,7 +66,7 @@ if (isset($_SESSION['admin'])) {
 }
 
 if (empty($data_result)) {
-  echo '<p class="text-center">Sorry! No results found for "'.$search_term.'". Check your spelling or try a different key word.</p>';
+  echo '<p class="text-center">Sorry! No results found.<p>';
 }
 
 else {

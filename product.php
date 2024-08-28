@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 require_once './includes/connect.inc';
@@ -44,14 +43,15 @@ if (isset($_POST['idproduct'], $_POST['quantity'])) {
       $update_r = $conn->query($update_q);
       if ($update_r) {
         header ("Location: cart.php");
+        exit();
       } 
   } else {
-    //echo "Product ID: $idproduct, Quantity: $quantity";
 
     $insert_q = "INSERT INTO cart_item (idcart, idproduct, item_quantity) VALUES ($idcart, $idproduct, $quantity)";
     $insert_r = $conn->query($insert_q);
     if ($insert_r) {
       header ("Location: cart.php");
+      exit();
     } 
   }
 }
@@ -114,28 +114,34 @@ $imagepath = "./item_images/$row[image_url]";
   <h2 class="mb-3 mt-5"><?=$row['name']?></h2>
   <h4 class="product-price">$<?=$row['price']?></h4>
   <p class="product-description mt-3"><?=$row['description']?></p>
-  <p><?=$row['stock']?> in stock.</p>
-  <form action='product.php?id=<?=$idproduct?>' method='post' class="d-flex my-4">
-    <div class="qty-group">
-      <p class="m-0 text-center text-muted">Quantity</p>
+
+  <?php 
+  if ($row['stock'] < 1) {
+    echo "<p>Sorry! This item is out of stock. Please check again another time.</p>";
+  } else {
+    echo "
+  <p>$row[stock] in stock.</p>
+  <form action='product.php?id=$idproduct' method='post' class='d-flex my-4'>
+    <div class='qty-group'>
+      <p class='m-0 text-center text-muted'>Quantity</p>
       <div class='d-flex'>
         <button class='btn btn-decrease px-2' >
             <i class='fas fa-minus'></i>
         </button>
 
-        <input min='1' max='<?=$row['stock']?>' name='quantity' value='1' type='number' class='quantity-input'>
-        <input type='hidden' name='idproduct' value='<?=$row['idproduct']?>'>
+        <input min='1' max='$row[stock]' name='quantity' value='1' type='number' class='quantity-input' data-stock='$row[stock]>
+        <input type='hidden' name='idproduct' value='$row[idproduct]'>
         
         <button class='btn btn-increase px-2'>
             <i class='fas fa-plus'></i>
         </button>
       </div>  
     </div>
-    <button type='submit' class="btn btn-green ms-5"><i class="fa fa-shopping-cart" aria-hidden="true"></i>Add to cart</button>
-    <input type='hidden' name='idproduct' value='<?=$row['idproduct']?>'>
-  </form>
+    <button type='submit' class='btn btn-green ms-5'><i class='fa fa-shopping-cart' aria-hidden='true'></i>Add to cart</button>
+    <input type='hidden' name='idproduct' value='$row[idproduct]'>
+  </form>";
+  }
 
-  <?php
   if (isset($_SESSION['admin'])) {
       echo "<a class='btn btn-red mt-3 me-2' href='editproduct.php?id=$row[idproduct]'>Edit product</a>";
       echo "<a class='btn btn-red mt-3' href='deleteproduct.php?id=$row[idproduct]'>Delete product</a>";
@@ -148,8 +154,30 @@ $imagepath = "./item_images/$row[image_url]";
 
 <?php include './includes/footer.html'?>
 
-<script src="quantity-buttons.js">
+<script>
+$(document).ready(function() {
+
+  //increase quantity of item on click
+  $('.btn-increase').on('click', function() {
+    event.preventDefault(); // prevents the form from submitting
+    let $input = $(this).siblings('.quantity-input');
+    let currentValue = parseInt($input.val());
+    let maxStock = parseInt($input.data('stock')); //getting stock from the form
+
+    if (currentValue < maxStock) {
+      $input.val(currentValue + 1);
+    }
+  });
+
+  $('.btn-decrease').on('click', function() {
+    event.preventDefault();
+    let $input = $(this).siblings('.quantity-input');
+    let currentValue = parseInt($input.val());
+    if (currentValue > 1) {
+      $input.val(currentValue - 1);
+    }
+  });
+});
 </script>
 </body>
 </html>
-

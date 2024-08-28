@@ -3,7 +3,7 @@
 
 session_start();
 
-require_once ('./includes/connect.inc');
+require_once './includes/connect.inc';
 
 if (isset($_SESSION['iduser'])) {
     $iduser = $_SESSION['iduser'];
@@ -14,6 +14,11 @@ if (isset($_SESSION['iduser'])) {
 if (isset($_POST['idproduct']) && isset($_POST['quantity'])) {
     $idproduct = $_POST['idproduct'];
     $quantity = $_POST['quantity'];
+
+    if ($quantity > 0) {
+        header ("Location: cart.php");
+        exit();
+    }
 
     // get id of the user's cart
     $cart_q = "SELECT idcart FROM cart WHERE iduser = $iduser";
