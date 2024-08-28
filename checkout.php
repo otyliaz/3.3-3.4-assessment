@@ -69,7 +69,7 @@ if ($display_r === false) {
 <div class="container">
 
     <div class="row">
-        <div class="col">
+        <div class="col-md-8">
             <div class="d-flex justify-content-between align-items-center">
                 <h1 class="m-3 ms-0">My Order</h1>
             </div>
@@ -114,15 +114,27 @@ if ($display_r === false) {
             }
             ?>
 
+            <div class="d-flex w-100">
+                <h3>Total price:</h3>
+                <h3 class="text-end">$<?= number_format($total_price, 2) ?></h3>
+            </div>
         </div>
-        <h2>Total price: $<?= number_format($total_price, 2) ?></h2>
-        <p>If you would like to edit your order, please click here. Remember to place the order again for it to go through.</p>
-        <form method="post" action="revert_order.php">
+        <div class="col-md-4 my-auto">
+
+
+        <p>If you would like to edit your order, please click the button below.</p>
+        <p class="mb-0">Remember to place the order again for it to go through.</p>
+        <form method="post" action="revert_order.php" class="text-center">
             <input type="hidden" name="idcart" value="<?=$idcart?>">
-            <button type="submit" class="btn btn-blue mt-3">Re-open Order</button>
+            <button type="submit" class="btn btn-red mt-3">Re-open Order</button>
         </form>
+        </div>
     </div>
 
 </div>
+
+
+<?php include './includes/footer.html'?>
+
 </body>
 </html>

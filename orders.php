@@ -31,8 +31,7 @@ $query = "SELECT user.iduser, user.username, user.email, user.fname, user.lname,
 FROM user JOIN cart on user.iduser = cart.iduser";
 
 if ($result = $conn->query($query)) {
-    $row = $result->fetch_assoc();
-
+    
     while($row = $result->fetch_assoc()) {
         $data_result[] = $row;
     }
@@ -73,7 +72,6 @@ if ($result = $conn->query($query)) {
                     WHERE cart_item.idcart = $row[idcart] AND cart.ordered=1";
 
                     $cart_r = $conn->query($cart_q);
-                    $order_items = [];
                     
                     echo "
                     <tr>
@@ -85,8 +83,9 @@ if ($result = $conn->query($query)) {
                         <td>";
                         
                         while($order = $cart_r->fetch_assoc()) {
-                            echo $order['product_name'] . "x" . $order['item_quantity'] . "<br>";
+                            echo $order['product_name'] . " x" . $order['item_quantity'] . "<br>";
                         }
+
                     echo "</td>
                         <td>view their events here</td>
                     </tr>";

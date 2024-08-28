@@ -88,7 +88,7 @@ else {
           <div class='card-body'>
             <h5 class='card-title'>$row[name]</h5>
             <div class='d-flex justify-content-between'>
-              <p class='fw-bold' id='item-price'>$$row[price]</p>
+              <p class='fw-bold' id='item-price'>$" . number_format($row['price'], 2) . "</p>
               <p class='card-text text-end'>$row[stock] in stock</p>
             </div>";
             // //if the user is an admin, show an EDIT button.

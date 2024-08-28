@@ -15,7 +15,7 @@ if (isset($_POST['idproduct']) && isset($_POST['quantity'])) {
     $idproduct = $_POST['idproduct'];
     $quantity = $_POST['quantity'];
 
-    if ($quantity > 0) {
+    if ($quantity < 1) {
         header ("Location: cart.php");
         exit();
     }
@@ -33,7 +33,7 @@ if (isset($_POST['idproduct']) && isset($_POST['quantity'])) {
         $update_r = $conn->query($update_q);
 
         if ($update_r) {
-            echo "<p>successful update</p>";
+            //echo "<p>successful update</p>";
             header ("Location: cart.php");
         } else {
             echo "Error: " . mysqli_error($conn);

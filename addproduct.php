@@ -38,6 +38,8 @@ if(isset($_POST['add'])) {
 
 <div class="container">
 
+    <h1>Add a product</h1>
+
     <form action="addproduct.php" method="post"> 
     <div class="form-group">
         <label for="name">Product name:</label>

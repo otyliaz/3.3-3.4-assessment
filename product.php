@@ -112,7 +112,7 @@ $imagepath = "./item_images/$row[image_url]";
 
 <div class='col-md-6'>
   <h2 class="mb-3 mt-5"><?=$row['name']?></h2>
-  <h4 class="product-price">$<?=$row['price']?></h4>
+  <h4 class="product-price">$<?php echo number_format($row['price'], 2); ?></h4>
   <p class="product-description mt-3"><?=$row['description']?></p>
 
   <?php 
@@ -125,14 +125,14 @@ $imagepath = "./item_images/$row[image_url]";
     <div class='qty-group'>
       <p class='m-0 text-center text-muted'>Quantity</p>
       <div class='d-flex'>
-        <button class='btn btn-decrease px-2' >
+        <button class='btn btn-qty text-muted btn-decrease px-2' >
             <i class='fas fa-minus'></i>
         </button>
 
-        <input min='1' max='$row[stock]' name='quantity' value='1' type='number' class='quantity-input' data-stock='$row[stock]>
+        <input min='1' max='$row[stock]' name='quantity' value='1' type='number' class='quantity-input' data-stock='$row[stock]'>
         <input type='hidden' name='idproduct' value='$row[idproduct]'>
         
-        <button class='btn btn-increase px-2'>
+        <button class='btn btn-qty text-muted btn-increase px-2'>
             <i class='fas fa-plus'></i>
         </button>
       </div>  

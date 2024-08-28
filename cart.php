@@ -78,20 +78,20 @@ $result = $conn->query($query);
                     </div>
                     <div class='col-md-3'>
                         <h6>$row[name]</h6>
-                        <p class='mb-0'>$$row[price]</p>
+                        <p class='mb-0'>$" . number_format($row['price'], 2) . "</p>
                     </div>
                     <div class='col-md-3 d-flex justify-content-center'>
                     <form class='qty-group' action='update_cart.php' method='post'>
                         <p class='m-0 text-center text-muted' id='qty-label'>Quantity</p>
                         <div class='d-flex'>
-                            <button class='btn btn-decrease px-2' >
+                            <button type='button' class='btn btn-qty text-muted btn-decrease px-2' >
                                 <i class='fas fa-minus'></i>
                             </button>
 
-                            <input min='1' max='$row[stock]' name='quantity' value='$row[item_quantity]' type='number' class='quantity-input p-0'>
+                            <input min='1' max='$row[stock]' name='quantity' value='$row[item_quantity]' type='number' class='quantity-input p-0' data-stock='$row[stock]'>
                             <input type='hidden' name='idproduct' value='$row[idproduct]'>
                             
-                            <button class='btn btn-increase px-2'>
+                            <button type='button' class='btn btn-qty btn-increase text-muted px-2'>
                                 <i class='fas fa-plus'></i>
                             </button>
                         </div>  
@@ -131,6 +131,8 @@ $result = $conn->query($query);
 
 </div> <!--closing class="container"-->
 
+<?php include './includes/footer.html'?>
+
 <script>
 $(document).ready(function() {
     //increase quantity of item on click
@@ -138,7 +140,11 @@ $(document).ready(function() {
         event.preventDefault(); //prevents the form from submitting
         let $input = $(this).siblings('.quantity-input');
         let currentValue = parseInt($input.val());
-        $input.val(currentValue + 1);
+        let maxStock = parseInt($input.data('stock')); //getting stock from the form
+
+        if (currentValue < maxStock) {
+            $input.val(currentValue + 1);
+        }        
 
         //sumbits form
         $(this).closest('form').submit();
@@ -153,7 +159,7 @@ $(document).ready(function() {
             $input.val(currentValue - 1);
         }
 
-        //$(this).closest('form').submit();
+        $(this).closest('form').submit();
     });
 });
 </script>

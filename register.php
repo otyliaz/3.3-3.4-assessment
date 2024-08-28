@@ -3,6 +3,17 @@
 <head>
     <title>Register - CAS Centenary</title>
     <?php include ('./includes/basehead.html'); ?>
+    <style>
+        .container {
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .event-checkbox {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 
 <?php
@@ -13,9 +24,9 @@ include('./includes/nav.php');
 if (isset($_SESSION['iduser'])) {
     $iduser = $_SESSION['iduser'];
 } else {
-    header ("Location: login.php");
+    header("Location: login.php");
+    exit();
 }
-
 
 if (isset($_POST['register'])) {
     $fname = $_POST['fname'];
@@ -35,13 +46,10 @@ if (isset($_POST['register'])) {
     if (isset($_POST['selected_events'])) {
         $events = $_POST['selected_events'];
         foreach ($events as $event_id) {
-            $insert_query = "INSERT INTO `registration` (iduser, idevent) VALUES (?, ?)";
-            if ($stmt = $conn->prepare($insert_query)) {
-                $stmt->bind_param("ii", $iduser, $event_id);
-                $stmt->execute();
-                $stmt->close();
-            } else {
-                echo "Error registering for event: " . $conn->error;
+            $insert_q = "INSERT INTO `registration` (iduser, idevent) VALUES ($iduser, $idevent)";
+            $insert_r = $conn->prepare($insert_query);
+            if (!$insert_r) {
+                echo "Error registering for event: " . mysqli_error($conn);
             }
         }
     }
@@ -51,10 +59,10 @@ if (isset($_POST['register'])) {
     exit();
 }
 
-$display_query = "SELECT * FROM event";
-$display_result = $conn->query($display_query);
+$display_q = "SELECT * FROM event";
+$display_r = $conn->query($display_q);
 
-if (!$display_result) {
+if (!$display_r) {
     echo "Error fetching events: " . $conn->error;
     exit();
 }
@@ -62,7 +70,7 @@ if (!$display_result) {
 
 <body>
 <div class="container">
-    <h2 class="my-4 text-center">This page is to register for an event</h2>
+    <h2 class="my-4 text-center">Book Now!</h2>
     <form action="register.php" method="post"> 
         <div class="form-group">
             <label for="fname">First Name:</label>
@@ -81,31 +89,30 @@ if (!$display_result) {
             <input class="form-control mb-2" type="number" name="grad_year" id="grad_year" placeholder="Type here..." required>
         </div>
 
-        <div class="row mt-2">
+        <div class="form-group">
+            <label for="events" class="fw-bold">Select Events:</label>
+            <p>This selection does not have to be final. It will help us obtain an approximate number of participants at each event.</p>
             <?php
-            if ($display_result->num_rows == 0) {
+            if ($display_r->num_rows == 0) {
                 echo '<p class="text-center">There are no events available at the moment. Check back again later!</p>';
             } else {
-                while ($row = $display_result->fetch_assoc()) {
-                    echo "<div class='col-md-4'>
-                            <div class='card mb-2'>
-                                <div class='card-body'>
-                                    <h5 class='card-title'>$row[name]</h5> 
-                                    <p class='card-text'>$row[description]</p>
-                                    <input type='checkbox' name='selected_events[]' class='select-event' id='event" . $row['idevent'] ."' value='" . $row['idevent'] . "'>
-                                    <label for='event" . $row['idevent'] . "' class='btn btn-blue select-btn'>Select</label>
-                                </div>
-                            </div>
-                        </div>";
+                while ($row = $display_r->fetch_assoc()) {
+                    echo "<div class='form-check'>
+                            <input type='checkbox' name='selected_events[]' class='form-check-input' id='event" . $row['idevent'] ."' value='" . $row['idevent'] . "'>
+                            <label class='form-check-label' for='event" . $row['idevent'] . "'>
+                                " . $row['name'] . ": " . $row['description'] . "
+                            </label>
+                          </div>";
                 }
             }
             ?>
         </div>
-        <input class="btn btn-blue w-100 mt-3" type="submit" name="register" value="Register!">
+        
+        <button class="btn btn-blue w-100 mt-3" type="submit" name="register">Register!</button>
     </form>
 </div>
 
-<?php include './includes/footer.html'?>
+<?php include './includes/footer.html' ?>
 
 </body>
 </html>
