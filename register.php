@@ -62,14 +62,12 @@ if (isset($_POST['register'])) {
         foreach ($events as $idevent) {
             $insert_q = "INSERT INTO `registration` (iduser, idevent) VALUES ($iduser, $idevent)";
             $insert_r = $conn->query($insert_q);
-                    
-            header("Location: register.php"); 
-            exit();
         }
+        header("Location: registered.php"); 
+        exit();
     } else {
         $event_error = "Please choose at least one event.";
     }
-
 }
 
 $display_q = "SELECT * FROM event";
@@ -82,60 +80,71 @@ if (!$display_r) {
 ?>
 
 <body>
-<div class="container justify-content-center align-items-center p-0 mt-5 pt-5">
-    <div class="row">
-        <h2 class="my-4 text-center">Event booking</h2>
+    
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 offset-md-2">   
+            <h2 class="my-4">Event Booking</h2>
+            <div class="form-container">
+                <form action="register.php" method="post"> 
+                    <div class="form-group mb-3">
+                        <label for="fname">First Name:</label>
+                        <input class="form-control" type="text" name="fname" id="fname" minlength="2" placeholder="Type here..." required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="lname">Last Name:</label>
+                        <input class="form-control" type="text" name="lname" id="lname" minlength="2" placeholder="Type here..." required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="email">Email:</label>
+                        <input class="form-control" type="text" name="email" id="email" placeholder="Type here..." required>
+                        <?php if (isset($email_error)) {
+                        echo '<p class="error p-2 my-2 text-center">' . $email_error . '</p>';
+                    } ?>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="grad_year">Graduation Year:</label>
+                        <input class="form-control mb-2" type="number" name="grad_year" id="grad_year" min="1925" max="2024" placeholder="Type here..." required>
+                    </div>
 
-        <!-- form -->
-        <div class="container justify-content-center align-items-center p-0 form-container">
-            <form action="register.php" method="post"> 
-                <div class="form-group">
-                    <label for="fname">First Name:</label>
-                    <input class="form-control mb-2" type="text" name="fname" id="fname" minlength="2" placeholder="Type here..." required>
-                </div>
-                <div class="form-group">
-                    <label for="lname">Last Name:</label>
-                    <input class="form-control mb-2" type="text" name="lname" id="lname" minlength="2" placeholder="Type here..." required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input class="form-control mb-2" type="text" name="email" id="email" placeholder="Type here..." required>
-                    <?php if (isset($email_error)) {
-                    echo '<p class="error p-2 my-2 text-center">' . $email_error . '</p>';
-                } ?>
-                </div>
-                <div class="form-group">
-                    <label for="grad_year">Graduation Year:</label>
-                    <input class="form-control mb-2" type="number" name="grad_year" id="grad_year" min="1925" max="2024" placeholder="Type here..." required>
-                </div>
-
-                <div class="form-group">
-                    <label for="events" class="fw-bold">Select Events:</label>
-                    <p>This selection does not have to be final. It will help us obtain an approximate number of participants at each event.</p>
-                    <?php
-                    if ($display_r->num_rows == 0) {
-                        echo '<p class="text-center">There are no events available at the moment. Check back again later!</p>';
-                    } 
-                    else {
-                        while ($row = $display_r->fetch_assoc()) {
-                            echo "<div class='form-check'>
-                                    <input type='checkbox' name='selected_events[]' class='form-check-input' id='event" . $row['idevent'] ."' value='" . $row['idevent'] . "'>
+                    <div class="form-group">
+                        <h6><label for="events">Select Events:</label></h6>
+                        <p></p>
+                        <?php
+                        if ($display_r->num_rows == 0) {
+                            echo '<p class="text-center">There are no events available at the moment. Check back again later!</p>';
+                        } 
+                        else {
+                            while ($row = $display_r->fetch_assoc()) {
+                                echo "<div class='form-check align-items-center mb-2'>
+                                    <input type='checkbox' name='selected_events[]' class='form-check-input ' id='event" . $row['idevent'] ."' value='" . $row['idevent'] . "'>
                                     <label class='form-check-label fw-bold' for='event" . $row['idevent'] . "'>
                                         " . $row['name'] . "
                                     </label>
-                                    <p>$row[description]</p>
-                                  </div>";
+                                    <p class='m-0'>$row[description]</p>
+                                    <p class='m-0'>Location: $row[location]</p>";
+                                    
+                                    if ($row['price'] > 0) {
+
+                                        echo "<p>Price: $" . number_format($row['price'], 2) . "</p>"; 
+                                    } else {
+                                        echo "<p>Price: Free of charge. </p>";
+                                    }
+            
+                                    echo "</div>";
+                            }
                         }
-                    }
+                        
+                    if (isset($event_error)) {
+                    echo '<p class="error p-2 mt-3 mb-0 text-center">' . $event_error . '</p>';
+                    } ?>
                     
-                if (isset($event_error)) {
-                echo '<p class="error p-2 mt-3 mb-0 text-center">' . $event_error . '</p>';
-                } ?>
-                
-                </div>
-                
-                <button class="btn btn-blue w-100 mt-3" type="submit" name="register">Register!</button>
-            </form>
+                    </div>
+                    
+                    <button class="btn btn-blue w-100" type="submit" name="register">Register!</button>
+                </form>
+            </div>
+
         </div>
     </div>
 </div>

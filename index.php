@@ -13,11 +13,11 @@ include './includes/nav.php';
 //echo $_SESSION['admin'];
 ?>
 <div class="container">
-    <h1 class="m-3 text-center">Welcome to the CAS Centenary Website!</h1>
+    <h1 class="mt-4 mt-md-3 text-center">Welcome to the CAS Centenary Website!</h1>
     <div class="row py-2 align-items-center">
 
-        <div class="col-md-6">
-            <div id="homeCarousel" class="carousel slide mb-2" data-bs-ride="carousel">
+        <div class="col-md-6 order-md-1 order-2 mt-2">
+            <div id="homeCarousel" class="carousel slide my-2" data-bs-ride="carousel">
 
                 <!-- indicator lines on carousel at bottom-->
                 <div class="carousel-indicators">
@@ -48,7 +48,7 @@ include './includes/nav.php';
             </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6 order-md-2 order-1">
             <p>Join us in our celebrations for 100 years of quality Christian education at Christchurch Adventist School. On this website, you can register for events at the reunion and buy CAS merchandise.</p>
             <p>Date: Friday 25th to Sunday 27th of April, 2025.</p>
             <p>Events open to all CAS Alumni.</p>
@@ -65,8 +65,8 @@ include './includes/nav.php';
             }
 
             if (isset($_SESSION['admin'])) {
-                $iduser = $_SESSION['iduser'];
-                echo "<a class='btn btn-red mx-3' href='attendees.php'>View attendees</a>";}
+                echo "<a class='btn btn-red mx-3' href='attendees.php'>View attendees</a>";
+                echo "<a class='btn btn-red' href='add_event.php'>Add an event</a>";}
             ?>
             
         </div>

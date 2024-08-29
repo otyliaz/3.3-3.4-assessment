@@ -63,38 +63,39 @@ if (isset($_POST['signup'])) {
 
 $conn->close();
 ?>
-
-<div class="container d-flex justify-content-center align-items-center p-0">
-    <div class="row">
-        <h2 class="my-4 text-center">Sign up!</h2>
-        <p class="text-center">Already have an account? Click <a href="login.php">here</a> to login.</p>
-
-        <!-- form -->
-        <div class="container justify-content-center align-items-center p-0 form-container">
-            <form action="signup.php" method="post">
-                <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input class="form-control mb-2" type="text" name="username" id="username" placeholder="Type here..." required> 
-                    <?php if (isset($nametaken)) {
-                        echo '<p class="error p-2 my-2 text-center">' . $nametaken . '</p>';
-                    } ?>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input class="form-control mb-2" type="password" name="password" id="password" placeholder="Type here..." minlength="8" required>
-                </div>
-                <div class="form-group">
-                    <label for="confirm">Confirm password:</label>
-                    <input class="form-control mb-2" type="password" name="confirm" id="confirm" placeholder="Type here..." minlength="8" required> 
-                    <?php if (isset($confirmerror)) {
-                        echo '<p class="error p-2 mt-3 mb-0 text-center">' . $confirmerror . '</p>';
-                    } ?>
-                </div>
-                <input class="btn btn-blue w-100 mt-3" type="submit" name="signup" value="Sign up!">
-            </form>
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 offset-md-2">
+            <h2 class="my-4 text-center">Sign up!</h2>
+            <p class="text-center">Already have an account? Click <a href="login.php">here</a> to login.</p>
+            <div class="form-container">
+                <form action="signup.php" method="post">
+                    <div class="form-group mb-3">
+                        <label for="username">Username:</label>
+                        <input class="form-control" type="text" name="username" id="username" placeholder="Type here..." required> 
+                        <?php if (isset($nametaken)) {
+                            echo '<p class="error p-2 my-2 text-center">' . $nametaken . '</p>';
+                        } ?>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="password">Password:</label>
+                        <input class="form-control" type="password" name="password" id="password" placeholder="Type here..." minlength="8" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="confirm">Confirm password:</label>
+                        <input class="form-control" type="password" name="confirm" id="confirm" placeholder="Type here..." minlength="8" required> 
+                        <?php if (isset($confirmerror)) {
+                            echo '<p class="error p-2 mt-3 mb-0 text-center">' . $confirmerror . '</p>';
+                        } ?>
+                    </div>
+                    <input class="btn btn-blue w-100" type="submit" name="signup" value="Sign up!">
+                </form>
+            </div>
         </div>
     </div>
 </div>
+
+<?php include './includes/footer.html'?>
 
 </body>
 </html>

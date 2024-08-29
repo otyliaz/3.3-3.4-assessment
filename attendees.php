@@ -3,17 +3,6 @@
 <head>
     <title>CAS Centenary</title>
     <?php include './includes/basehead.html'; ?>
-    <style>
-        .container {
-            margin-top: 20px;
-        }
-        .table thead th {
-            text-align: center;
-        }
-        .table td, .table th {
-            vertical-align: middle;
-        }
-    </style>
 </head>
 
 <?php
@@ -27,7 +16,7 @@ if (!isset($_SESSION['admin'])) {
     exit();
 }
 
-$query = "SELECT user.iduser, user.username, user.email, user.fname, user.lname, user.grad_year, cart.idcart 
+$query = "SELECT user.iduser, user.username, user.email, user.fname, user.lname, user.grad_year, cart.idcart, cart.paid
 FROM user JOIN cart on user.iduser = cart.iduser";
 
 if ($result = $conn->query($query)) {
@@ -43,7 +32,7 @@ if ($result = $conn->query($query)) {
 
 <body>
 <div class="container">
-    <h2 class="text-center">Users</h2>
+    <h2 class="text-center pt-3">Users</h2>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -52,8 +41,9 @@ if ($result = $conn->query($query)) {
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Graduation Year</th>
-                <th>Order Items</th>
                 <th>Booked Events</th>
+                <th>Order Items</th>
+                <th>Paid</th>
             </tr>
         </thead>
         <tbody>
@@ -65,7 +55,7 @@ if ($result = $conn->query($query)) {
             else {
                 foreach ($data_result as $row) { 
                     
-                    $cart_q = "SELECT product.name AS product_name, product.price, cart_item.item_quantity, cart.ordered
+                    $cart_q = "SELECT product.name AS product_name, product.price, cart_item.item_quantity, cart.ordered, cart.idcart
                     FROM cart_item
                     JOIN product ON cart_item.idproduct = product.idproduct
                     JOIN cart ON cart.idcart = cart_item.idcart
@@ -73,6 +63,14 @@ if ($result = $conn->query($query)) {
 
                     $cart_r = $conn->query($cart_q);
                     
+                    $event_q = "SELECT event.name AS event_name 
+                    FROM registration 
+                    JOIN user ON registration.iduser = user.iduser 
+                    JOIN event ON event.idevent = registration.idevent 
+                    WHERE registration.iduser = $row[iduser]";
+
+                    $event_r = $conn->query($event_q);
+
                     echo "
                     <tr>
                         <td>$row[iduser]</td>
@@ -82,26 +80,27 @@ if ($result = $conn->query($query)) {
                         <td>$row[grad_year]</td>
                         <td>";
                         
-                    while($order = $cart_r->fetch_assoc()) {
-                        echo $order['product_name'] . " x" . $order['item_quantity'] . "<br>";
+                    while($event = $event_r->fetch_assoc()) {
+                        echo $event['event_name'] . "<br>";
                     }
                         
                     echo "</td>
                         <td>";
-
-                    $event_q = "SELECT event.name AS event_name 
-                    FROM registration 
-                    JOIN user ON registration.iduser = user.iduser 
-                    JOIN event ON event.idevent = registration.idevent 
-                    WHERE registration.iduser = $row[iduser]";
-
-                    $event_r = $conn->query($event_q);
-
-                    while($event = $event_r->fetch_assoc()) {
-                        echo $event['event_name'] . "<br>";
+                        
+                    while($order = $cart_r->fetch_assoc()) {
+                        echo $order['product_name'] . " x" . $order['item_quantity'] . "<br>";
                     }
+                echo "</td>
+                    <td>";
 
-                    echo "</td>
+                    //if they've paid, show tick
+                    if ($row['paid'] == 1) { 
+                        echo "<p class='mb-0 text-center'> Paid <i class='fa fa-check-square' aria-hidden='true'></i></p>";
+                    } else if ($cart_r->num_rows > 0){ // if they have items ordered,
+                        echo "<a class='btn btn-red' href='mark_paid.php?idcart=$row[idcart]'>Mark as paid</a>";
+                    }
+                    
+                echo "</td>
                     </tr>";
                 }
             } 
@@ -110,5 +109,7 @@ if ($result = $conn->query($query)) {
         </tbody>
     </table>
 </div>
+
+<?php include './includes/footer.html'?>
 </body>
 </html>

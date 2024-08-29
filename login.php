@@ -49,7 +49,7 @@ if(isset($_POST['login'])) {
             $cart_r = $conn->query($cart_q);
 
             if ($cart_r->num_rows == 0) {  //if they don't have a cart created
-                $create_cart_q = "INSERT INTO cart (iduser) VALUES ($iduser)";
+                $create_cart_q = "INSERT INTO cart (iduser, ordered) VALUES ($iduser, 0)";
                 $create_cart_r = $conn->query($create_cart_q);
 
             }
@@ -78,30 +78,34 @@ mysqli_close($conn);
 
 <body>
 
-<div class="container d-flex justify-content-center align-items-center p-0">
-    <div class="row">
-        <h2 class="my-4 text-center">Log in to access all our features.</h2>
-        <p class="text-center">Don't have an account? Click <a href="signup.php">here</a> to create one!</p>
-
-        <div class="container justify-content-center align-items-center p-0 form-container">
-        <form action="login.php" method="post">
-            <div class="form-group">
-                <label for="username">Username:</label>
-                <input class="form-control mb-2 w-100" type="text" name="username" id="username" placeholder="Type here..." required>
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 offset-md-2">
+            <h2 class="my-4">Log in to access all our features.</h2>
+            <p>Don't have an account? Click <a href="signup.php">here</a> to create one!</p>
+            <div class="form-container">
+                <form action="login.php" method="post">
+                    <div class="form-group mb-3">
+                        <label for="username">Username:</label>
+                        <input class="form-control" type="text" name="username" id="username" placeholder="Type here..." required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="password">Password:</label>
+                        <input class="form-control" type="password" name="password" id="password" min=7 placeholder="Type here..." required>
+                        <?php if (isset($invalid)) {
+                            // if error, print error
+                            echo '<p class="error p-2 mt-3 mb-0 text-center">' . $invalid . '</p>';
+                        } ?>
+                    </div>
+                    <input class="btn btn-blue w-100" type="submit" name="login" value="Log in!">
+                </form>
             </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input class="form-control mb-2 w-100" type="password" name="password" id="password" min=7 placeholder="Type here..." required>
-                <?php if (isset($invalid)) {
-                    // if error, print error
-                    echo '<p class="error p-2 mt-3 mb-0 text-center">' . $invalid . '</p>';
-                } ?>
-            </div>
-            <input class="btn btn-blue w-100 mt-3" type="submit" name="login" value="Log in!">
-        </form>
         </div>
     </div>
 </div>
+
+<?php include './includes/footer.html'?>
+
 
 </body>
 </html>

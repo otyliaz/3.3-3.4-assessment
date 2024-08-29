@@ -2,7 +2,7 @@
 <?php
 session_start();
 
-require_once ('./includes/connect.inc');
+require_once './includes/connect.inc';
 
 if (!isset($_SESSION['admin'])) {
     header("Location: shop.php");
@@ -16,11 +16,16 @@ if(isset($_POST['add'])) {
     $description = $_POST['description'];
     $image_url = $_POST['image_url'];
 
-    $query = "INSERT INTO product (name, price, stock, description, image_url) VALUES ('$name', $price, $stock, '$description', '$image_url')";
-    $result = $conn->query($query);
+    $query = "INSERT INTO product (name, price, stock, description, image_url) VALUES (?,?,?,?,?)";
 
-    if ($result){
+    if ($stmt = $conn->prepare($query)) {
+        $stmt->bind_param("sdiss", $name, $price, $stock, $description, $image_url);
+        $stmt->execute();
+        $stmt->close();
         header("Location: shop.php");
+        exit();
+    } else {
+        echo "Error adding product: " . mysqli_error($conn);
     }
 }
 ?>

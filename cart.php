@@ -18,13 +18,14 @@ if (isset($_SESSION['iduser'])) {
     exit();
 }
 
-$cart_q = "SELECT idcart, ordered FROM cart WHERE iduser = $iduser";
+$cart_q = "SELECT idcart, ordered, paid FROM cart WHERE iduser = $iduser";
 $cart_r = $conn->query($cart_q);
 $row = $cart_r->fetch_assoc();
 $idcart = $row['idcart'];
+$paid = $row['paid'];
 
 if ($row['ordered'] == 1) {
-    header ("Location: checkout.php?idcart=$idcart");
+    header ("Location: checkout.php");
     exit();
 }
 
@@ -43,7 +44,7 @@ $result = $conn->query($query);
 <div class="container">
 
 <div class="row">
-    <div class="col-md-8 pe-4">
+    <div class="col-12 col-md-8 pe-4">
         <div class="d-flex justify-content-between align-items-center">
             <h1 class="m-3 ms-0">My Cart</h1>
         </div>
@@ -67,7 +68,7 @@ $result = $conn->query($query);
 
                 echo "
                 <div class='row d-flex justify-content-between align-items-center'>
-                    <div class='col-md-2'>
+                    <div class='col-2'>
                     <img class='cart-img' src='";
 
                     if (file_exists($imagepath)) {
@@ -75,11 +76,11 @@ $result = $conn->query($query);
                     else {echo "./item_images/no_img.png";}
                     echo "' alt='$row[name]'>
                     </div>
-                    <div class='col-md-3'>
+                    <div class='col-3'>
                         <h6>$row[name]</h6>
                         <p class='mb-0'>$" . number_format($row['price'], 2) . "</p>
                     </div>
-                    <div class='col-md-3 d-flex justify-content-center'>
+                    <div class='col-3 d-flex justify-content-center'>
                     <form class='qty-group' action='update_cart.php' autocomplete='off' method='post'>
                         <p class='m-0 text-center text-muted' id='qty-label'>Quantity</p>
                         <div class='d-flex'>
@@ -96,10 +97,10 @@ $result = $conn->query($query);
                         </div>  
                     </form>
                     </div>
-                    <div class='col-md-3'>
+                    <div class='col-3'>
                         <h6 class='mb-0 text-center'>$" . number_format($item_total, 2) . "</h6>
                     </div>
-                    <div class='col-md-1 text-end'>
+                    <div class='col-1 text-end'>
                         <a href='delete_cart_item.php?id=$row[idproduct]' class='delete-icon'><i class='fas fa-trash'></i></a>
                     </div>
                 </div> <!--closing class='row'-->";
@@ -111,7 +112,7 @@ $result = $conn->query($query);
 
     </div> <!--closing class="col-md-8"-->
 
-    <div class="col-md-4">
+    <div class="col-md-4 col-12">
         <h2 class="m-3 pt-2 mt-5 text-center">Order Summary</h2>
         <div class="d-flex justify-content-between">
             <p class="mb-0"><?=$total_items?> items</p>
@@ -122,7 +123,7 @@ $result = $conn->query($query);
             <h5>Total</h5>
             <h5 class="text-end">$<?=number_format($total_price, 2)?></h5>
         </div>
-        <a class="btn btn-green mt-3" href="checkout.php?idcart=<?=$idcart?>">Place Order</a>
+        <a class="btn btn-green mt-3" href="checkout.php">Place Order</a>
     </div>
 
     

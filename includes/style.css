@@ -1,8 +1,7 @@
-/* #193067
-#DCE1E9 */
+
 
 .container {
-    padding-top: 80px;
+    padding-top: 90px;
     flex: 1;
 }
 
@@ -214,8 +213,6 @@ i {
     color: #A82428;
 }
 
-
-
 /* cart  */
 
 .cart-img {
@@ -259,4 +256,27 @@ footer {
     display: flex;              
 }
 
+/* checkbox for register page */
 
+.form-check-label:hover {
+    text-decoration: underline;
+}
+
+/* tables for attendees */
+
+.table tbody td {
+    text-align: center;
+}
+
+.table thead th {
+    text-align: center;
+}
+.table td, .table th {
+    vertical-align: middle;
+}
+
+
+.fa-check-square {
+    color: #095D36;
+    font-size: larger;
+}

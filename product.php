@@ -2,31 +2,24 @@
 session_start();
 require_once './includes/connect.inc';
 
+if (isset($_SESSION['iduser'])) {
+  $iduser = $_SESSION['iduser'];
+} else {
+  header ("Location: login.php");
+  exit();
+}
+
+//checking if user has a cart created
+$cart_q = "SELECT idcart, ordered FROM cart WHERE iduser = $iduser";
+$cart_r = $conn->query($cart_q);
+
+if ($cart_r->num_rows > 0) {
+  $row = $cart_r->fetch_assoc(); 
+  $idcart = $row['idcart'];
+  $ordered = $row['ordered'];
+}
+
 if (isset($_POST['idproduct'], $_POST['quantity'])) {
-    
-  if (isset($_SESSION['iduser'])) {
-    $iduser = $_SESSION['iduser'];
-  } else {
-    header ("Location: login.php");
-    exit();
-  }
-
-  //checking if user has a cart created
-  $cart_q = "SELECT idcart FROM cart WHERE iduser = $iduser";
-  $cart_r = $conn->query($cart_q);
-
-  if ($cart_r->num_rows == 0) {  //if they don't have a cart created
-      $create_cart_q = "INSERT INTO cart (iduser) VALUES ($iduser)";
-      $create_cart_r = $conn->query($create_cart_q);
-
-      //gets the id (auto_increment value) of the recently inserted row
-      $idcart = $conn->insert_id; 
-
-  }
-  else { //if they have a cart already
-    $row = $cart_r->fetch_assoc(); 
-    $idcart = $row['idcart'];
-  }
 
   $idproduct = $_POST['idproduct'];
   $quantity = $_POST['quantity'];
@@ -119,8 +112,12 @@ $imagepath = "./item_images/$row[image_url]";
     echo "<p>Sorry! This item is out of stock. Please check again another time.</p>";
   } else {
     echo "
-  <p>$row[stock] in stock.</p>
-  <form action='product.php?id=$idproduct' method='post' autocomplete='off' class='d-flex my-4'>
+  <p>$row[stock] in stock.</p>";} 
+
+  //var_dump($ordered);
+
+  if ($ordered == 0) {
+    echo "<form action='product.php?id=$idproduct' method='post' autocomplete='off' class='d-flex my-4'>
     <div class='qty-group'>
       <p class='m-0 text-center text-muted'>Quantity</p>
       <div class='d-flex'>
@@ -139,6 +136,9 @@ $imagepath = "./item_images/$row[image_url]";
     <button type='submit' class='btn btn-green ms-5'><i class='fa fa-shopping-cart' aria-hidden='true'></i>Add to cart</button>
     <input type='hidden' name='idproduct' value='$row[idproduct]'>
   </form>";
+  } else {
+    echo "<p>You have already placed an order.</p> 
+    <a class='btn btn-blue' href='cart.php'>View Cart</a><br>";
   }
 
   if (isset($_SESSION['admin'])) {
