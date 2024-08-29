@@ -63,6 +63,10 @@ include './includes/nav.php';
                 echo "<p>Create an account to book one of the limited spaces available at the reunion.</p>
                 <a class='btn btn-green' href='signup.php'>Sign Up Now!</a>";
             }
+
+            if (isset($_SESSION['admin'])) {
+                $iduser = $_SESSION['iduser'];
+                echo "<a class='btn btn-red mx-3' href='attendees.php'>View attendees</a>";}
             ?>
             
         </div>

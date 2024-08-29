@@ -82,12 +82,26 @@ if ($result = $conn->query($query)) {
                         <td>$row[grad_year]</td>
                         <td>";
                         
-                        while($order = $cart_r->fetch_assoc()) {
-                            echo $order['product_name'] . " x" . $order['item_quantity'] . "<br>";
-                        }
+                    while($order = $cart_r->fetch_assoc()) {
+                        echo $order['product_name'] . " x" . $order['item_quantity'] . "<br>";
+                    }
+                        
+                    echo "</td>
+                        <td>";
+
+                    $event_q = "SELECT event.name AS event_name 
+                    FROM registration 
+                    JOIN user ON registration.iduser = user.iduser 
+                    JOIN event ON event.idevent = registration.idevent 
+                    WHERE registration.iduser = $row[iduser]";
+
+                    $event_r = $conn->query($event_q);
+
+                    while($event = $event_r->fetch_assoc()) {
+                        echo $event['event_name'] . "<br>";
+                    }
 
                     echo "</td>
-                        <td>view their events here</td>
                     </tr>";
                 }
             } 

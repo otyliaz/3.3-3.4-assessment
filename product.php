@@ -7,9 +7,8 @@ if (isset($_POST['idproduct'], $_POST['quantity'])) {
   if (isset($_SESSION['iduser'])) {
     $iduser = $_SESSION['iduser'];
   } else {
-    echo "create an account to add items to cart! no thanks, i want to continue browsing";
+    header ("Location: login.php");
     exit();
-    //header ("Location: login.php");
   }
 
   //checking if user has a cart created
@@ -121,7 +120,7 @@ $imagepath = "./item_images/$row[image_url]";
   } else {
     echo "
   <p>$row[stock] in stock.</p>
-  <form action='product.php?id=$idproduct' method='post' class='d-flex my-4'>
+  <form action='product.php?id=$idproduct' method='post' autocomplete='off' class='d-flex my-4'>
     <div class='qty-group'>
       <p class='m-0 text-center text-muted'>Quantity</p>
       <div class='d-flex'>

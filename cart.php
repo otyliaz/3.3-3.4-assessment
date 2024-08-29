@@ -10,13 +10,12 @@
 session_start();
 require_once'./includes/connect.inc';
 include'./includes/nav.php';
+
 if (isset($_SESSION['iduser'])) {
     $iduser = $_SESSION['iduser'];
 } else {
-    //do this
-    echo "sign in to you account to add items to cart! no thanks, i want to continue browsing";
-    //exit();
-    //header ("Location: login.php");
+    header ("Location: login.php");
+    exit();
 }
 
 $cart_q = "SELECT idcart, ordered FROM cart WHERE iduser = $iduser";
@@ -81,7 +80,7 @@ $result = $conn->query($query);
                         <p class='mb-0'>$" . number_format($row['price'], 2) . "</p>
                     </div>
                     <div class='col-md-3 d-flex justify-content-center'>
-                    <form class='qty-group' action='update_cart.php' method='post'>
+                    <form class='qty-group' action='update_cart.php' autocomplete='off' method='post'>
                         <p class='m-0 text-center text-muted' id='qty-label'>Quantity</p>
                         <div class='d-flex'>
                             <button type='button' class='btn btn-qty text-muted btn-decrease px-2' >
@@ -161,6 +160,7 @@ $(document).ready(function() {
 
         $(this).closest('form').submit();
     });
+    
 });
 </script>
 </body>

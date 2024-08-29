@@ -61,7 +61,7 @@ $display_q = "SELECT product.idproduct, product.name, product.image_url, product
 $display_r = $conn->query($display_q);
 
 if ($display_r === false) {
-    die("Database query failed: " . $conn->error);
+    echo "Error: " . mysqli_error($conn);
 }
 
 ?>
@@ -114,9 +114,9 @@ if ($display_r === false) {
             }
             ?>
 
-            <div class="d-flex w-100">
+            <div class="d-flex w-100 mt-3 justify-content-between">
                 <h3>Total price:</h3>
-                <h3 class="text-end">$<?= number_format($total_price, 2) ?></h3>
+                <h3 class="me-5">$<?= number_format($total_price, 2) ?></h3>
             </div>
         </div>
         <div class="col-md-4 my-auto">

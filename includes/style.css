@@ -11,13 +11,6 @@ img {
     object-fit: cover;
 }
 
-/* .center-content {   for error pages 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-} */
-
 p {
     text-align: justify;
 }
@@ -29,6 +22,9 @@ body {
     margin: 0;
 }
 
+.form-container {
+    max-width: 500px;}
+
 /* buttons -----------------------*/
 .btn {
     color: white;
@@ -38,18 +34,13 @@ body {
 .btn:hover {
     color: white;
 }  
-/* I didn't apply these styles to all buttons because of the quantity selector buttons     */
-
     
 .btn-red {
     background-color: #CA2B30;   
-    color: white;
-    box-shadow: 0 2px 6px #0000001a;
 }
 
 .btn-red:hover {
     background-color: #A82428;
-    color: white;
 }
 
 .btn-red:active { /*to override bootstrap default  */
@@ -59,29 +50,28 @@ body {
 
 .btn-green {
     background-color: #095D36;
-    color: white;
-    box-shadow: 0 2px 6px #0000001a;
 }
 
 .btn-green:hover {
     background-color: #063820;
-    color: white;
 }
 
-.btn-green:hover {
-    background-color: #063820;
-    color: white;
+.btn-green:active {
+    background-color: #02130B !important;
+    color: white !important;
 }
 
 .btn-blue {  
     background-color: #193067;
-    color: white;
-    box-shadow: 0 2px 6px #0000001a;
 }
 
 .btn-blue:hover {
     background-color: #142752;
-    color: white;
+}
+
+.btn-blue:active {
+    background-color: #0C1731 !important;
+    color: white !important;
 }
 
 /* index.php */
@@ -127,6 +117,10 @@ body {
 #signup-link, #logout-link {
     background-color: #193067;
     color: #EFF2FB;
+}
+
+#login-link {
+    box-shadow: none;
 }
 
 #logo {
@@ -213,12 +207,10 @@ i {
 }
 
 .error {
-    margin: 10px 0; /* Add margin to avoid affecting the form's width */
-    padding: 10px;
-    width: 100px;
-    border: 1px solid #d9534f; /* Optional: Add border to highlight error */
-    border-radius: 4px; /* Optional: Rounded corners */
-    background-color: #f2dede; /* Light red background for errors */
+    border: 1px solid #CA2B30; 
+    border-radius: 4px;
+    background-color: #f2dede; 
+    color: #A82428;
 }
 
 
