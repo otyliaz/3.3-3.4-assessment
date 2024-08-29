@@ -14,8 +14,8 @@ include 'includes/nav.php';
 //var_dump($_SERVER['REQUEST_METHOD']);
 if(isset($_POST['login'])) {
         
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
 
     //hash password
     $passworden = hash('sha256', $password);
@@ -91,7 +91,7 @@ mysqli_close($conn);
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input class="form-control mb-2 w-100" type="password" name="password" id="password" placeholder="Type here..." required>
+                <input class="form-control mb-2 w-100" type="password" name="password" id="password" min=7 placeholder="Type here..." required>
                 <?php if (isset($invalid)) {
                     // if error, print error
                     echo '<p class="error p-2 mt-3 mb-0 text-center">' . $invalid . '</p>';

@@ -31,35 +31,45 @@ if ($check_r->num_rows > 0) {
 }
 
 if (isset($_POST['register'])) {
-    $fname = $_POST['fname'];
-    $lname = $_POST['lname'];
-    $email = $_POST['email'];
-    $grad_year = $_POST['grad_year'];
-
-    $update_q= "UPDATE `user` SET `email`=?, `fname`=?, `lname`=?, `grad_year`=? WHERE iduser=?";
-    if ($stmt = $conn->prepare($update_q)) {
-        $stmt->bind_param("sssii", $email, $fname, $lname, $grad_year, $iduser);
-        $stmt->execute();
-        $stmt->close();
-    } else {
-        echo "Error updating user: " . mysqli_error($conn);
-    }
+    $fname = trim($_POST['fname']);
+    $lname = trim($_POST['lname']);
+    $email = trim($_POST['email']);
+    $grad_year = trim($_POST['grad_year']);
 
     if (isset($_POST['selected_events'])) {
         $events = $_POST['selected_events'];
+    } else {
+        $events = [];
+    }
+
+    //php built-in validate email
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $email_error = "Please enter a valid email.";
+    } else {
+
+        $update_q= "UPDATE `user` SET `email`=?, `fname`=?, `lname`=?, `grad_year`=? WHERE iduser=?";
+        if ($stmt = $conn->prepare($update_q)) {
+            $stmt->bind_param("sssii", $email, $fname, $lname, $grad_year, $iduser);
+            $stmt->execute();
+            $stmt->close();
+        } else {
+            echo "Error updating user: " . mysqli_error($conn);
+        }
+
+    }
+
+    if (!empty($events)) {
         foreach ($events as $idevent) {
             $insert_q = "INSERT INTO `registration` (iduser, idevent) VALUES ($iduser, $idevent)";
             $insert_r = $conn->query($insert_q);
-            if (!$insert_r) {
-                echo "Error registering for event: " . mysqli_error($conn);
-                exit();
-            }
+                    
+            header("Location: register.php"); 
+            exit();
         }
+    } else {
+        $event_error = "Please choose at least one event.";
     }
 
-    $conn->close();
-    header("Location: register.php"); 
-    exit();
 }
 
 $display_q = "SELECT * FROM event";
@@ -81,19 +91,22 @@ if (!$display_r) {
             <form action="register.php" method="post"> 
                 <div class="form-group">
                     <label for="fname">First Name:</label>
-                    <input class="form-control mb-2" type="text" name="fname" id="fname" placeholder="Type here..." required>
+                    <input class="form-control mb-2" type="text" name="fname" id="fname" minlength="2" placeholder="Type here..." required>
                 </div>
                 <div class="form-group">
                     <label for="lname">Last Name:</label>
-                    <input class="form-control mb-2" type="text" name="lname" id="lname" placeholder="Type here..." required>
+                    <input class="form-control mb-2" type="text" name="lname" id="lname" minlength="2" placeholder="Type here..." required>
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
                     <input class="form-control mb-2" type="text" name="email" id="email" placeholder="Type here..." required>
+                    <?php if (isset($email_error)) {
+                    echo '<p class="error p-2 my-2 text-center">' . $email_error . '</p>';
+                } ?>
                 </div>
                 <div class="form-group">
                     <label for="grad_year">Graduation Year:</label>
-                    <input class="form-control mb-2" type="number" name="grad_year" id="grad_year" placeholder="Type here..." required>
+                    <input class="form-control mb-2" type="number" name="grad_year" id="grad_year" min="1925" max="2024" placeholder="Type here..." required>
                 </div>
 
                 <div class="form-group">
@@ -104,7 +117,6 @@ if (!$display_r) {
                         echo '<p class="text-center">There are no events available at the moment. Check back again later!</p>';
                     } 
                     else {
-                        $selected_events=[];
                         while ($row = $display_r->fetch_assoc()) {
                             echo "<div class='form-check'>
                                     <input type='checkbox' name='selected_events[]' class='form-check-input' id='event" . $row['idevent'] ."' value='" . $row['idevent'] . "'>
@@ -115,7 +127,11 @@ if (!$display_r) {
                                   </div>";
                         }
                     }
-                    ?>
+                    
+                if (isset($event_error)) {
+                echo '<p class="error p-2 mt-3 mb-0 text-center">' . $event_error . '</p>';
+                } ?>
+                
                 </div>
                 
                 <button class="btn btn-blue w-100 mt-3" type="submit" name="register">Register!</button>

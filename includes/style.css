@@ -112,6 +112,7 @@ body {
 
 #nav-username {
     color: #182E63;
+    text-decoration: none;
 }
 
 #signup-link, #logout-link {
@@ -257,3 +258,5 @@ footer {
     align-items: center;
     display: flex;              
 }
+
+

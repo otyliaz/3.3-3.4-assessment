@@ -17,7 +17,7 @@ include './includes/nav.php';
     <div class="row py-2 align-items-center">
 
         <div class="col-md-6">
-            <div id="homeCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div id="homeCarousel" class="carousel slide mb-2" data-bs-ride="carousel">
 
                 <!-- indicator lines on carousel at bottom-->
                 <div class="carousel-indicators">

@@ -11,8 +11,8 @@ require_once "./includes/connect.inc";
 include './includes/nav.php';
 
 if (isset($_POST['signup'])) {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
 
     // selects to see if username already exists
     $select = "SELECT `username` FROM user WHERE `username` = ?";
