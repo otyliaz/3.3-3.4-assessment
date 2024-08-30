@@ -7,13 +7,16 @@ if (!isset($_SESSION['admin'])) {
     exit();
 }
 
-if (isset($_GET['idcart'])) {
-    
+if (isset($_GET['iduser'])) {
+    //iduser of the user in the database that paid
+    $iduser = $_GET['iduser']; 
+} else {
+    header("HTTP/1.0 404 Not Found");
+    include '404.php';
+    exit();
 }
 
-$idcart = $_GET['idcart']; 
-
-$update_q = "UPDATE cart SET paid = 1 WHERE idcart = $idcart";
+$update_q = "UPDATE user SET event_paid = 1 WHERE iduser = $iduser";
 $update_r = $conn->query($update_q);
  
 if ($update_r) {

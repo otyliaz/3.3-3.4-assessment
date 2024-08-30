@@ -56,9 +56,18 @@ include './includes/nav.php';
             <?php
             if (isset($_SESSION['iduser'])) {
                 $iduser = $_SESSION['iduser'];
+                
+                $query = "SELECT * FROM `registration` WHERE iduser = $iduser";
+                $result = $conn->query($query);
+
+                // if the user has already registered,
+                if ($result->num_rows > 0) {
+                    echo "<p class='my-2 fw-bold thanks'>Thank you for booking. We hope to see you next year!</p>";
+                    exit();
+                } else {
                 echo "<p>Book your spot for the reunion!</p>
                 <a class='btn btn-green' href='register.php'>Register Now!</a>"; //the button is weird when i click on it
-
+                }
             } else {
                 echo "<p>Create an account to book one of the limited spaces available at the reunion.</p>
                 <a class='btn btn-green' href='signup.php'>Sign Up Now!</a>";

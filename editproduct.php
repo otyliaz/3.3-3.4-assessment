@@ -14,7 +14,9 @@ if (isset($_GET['id'])) {
 }
 
 else {
-    echo 'the page you are looking for does not exist'; //redirect to error page
+    header("HTTP/1.0 404 Not Found");
+    include '404.php';
+    exit();
 }
 
 if (!isset($_SESSION['admin'])) {

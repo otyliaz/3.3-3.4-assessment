@@ -16,7 +16,8 @@ if (!isset($_SESSION['admin'])) {
     exit();
 }
 
-$query = "SELECT user.iduser, user.username, user.email, user.fname, user.lname, user.grad_year, cart.idcart, cart.paid
+$query = "SELECT user.iduser, user.username, user.email, user.fname, user.lname,
+ user.grad_year, cart.idcart, cart.paid as order_paid, user.event_paid
 FROM user JOIN cart on user.iduser = cart.iduser";
 
 if ($result = $conn->query($query)) {
@@ -42,6 +43,7 @@ if ($result = $conn->query($query)) {
                 <th>Last Name</th>
                 <th>Graduation Year</th>
                 <th>Booked Events</th>
+                <th>Events Paid</th>
                 <th>Order Items</th>
                 <th>Order Paid</th>
             </tr>
@@ -95,6 +97,16 @@ if ($result = $conn->query($query)) {
                         
                     echo "</td>
                         <td>";
+
+                    //if they've paid for event, show tick
+                    if ($row['event_paid'] == 1) { 
+                        echo "<p class='mb-0 text-center'> Paid <i class='fa fa-check-square' aria-hidden='true'></i></p>";
+                    } else if ($event_r->num_rows > 0){ // if they have registered,
+                        echo "<a class='btn btn-red' href='mark_event_paid.php?iduser=$row[iduser]'>Mark as paid</a>";
+                    }
+
+                    echo "</td>
+                        <td>";
                         
                     //if ordered cart has items,
                     if ($cart_r->num_rows > 0) {
@@ -109,11 +121,11 @@ if ($result = $conn->query($query)) {
                 echo "</td>
                     <td>";
 
-                    //if they've paid, show tick
-                    if ($row['paid'] == 1) { 
+                    //if they've paid for cart, show tick
+                    if ($row['order_paid'] == 1) { 
                         echo "<p class='mb-0 text-center'> Paid <i class='fa fa-check-square' aria-hidden='true'></i></p>";
                     } else if ($cart_r->num_rows > 0){ // if they have items ordered,
-                        echo "<a class='btn btn-red' href='mark_paid.php?idcart=$row[idcart]'>Mark as paid</a>";
+                        echo "<a class='btn btn-red' href='mark_order_paid.php?idcart=$row[idcart]'>Mark as paid</a>";
                     }
                     
                 echo "</td>

@@ -44,7 +44,7 @@ $result = $conn->query($query);
 <div class="container">
 
 <div class="row">
-    <div class="col-12 col-md-8 pe-4">
+    <div class="col-12 col-lg-8 pe-4">
         <div class="d-flex justify-content-between align-items-center">
             <h1 class="m-3 ms-0">My Cart</h1>
         </div>
@@ -67,9 +67,9 @@ $result = $conn->query($query);
                 $imagepath = "./item_images/$row[image_url]";
 
                 echo "
-                <div class='row d-flex justify-content-between align-items-center'>
-                    <div class='col-2'>
-                    <img class='cart-img' src='";
+                <div class='row d-flex justify-content-between align-items-center cart-row'>
+                    <div class='col-2 pe-0 justify-content-center d-flex'>
+                    <img class='cart-img py-1' src='";
 
                     if (file_exists($imagepath)) {
                         echo $imagepath; }
@@ -77,7 +77,7 @@ $result = $conn->query($query);
                     echo "' alt='$row[name]'>
                     </div>
                     <div class='col-3'>
-                        <h6>$row[name]</h6>
+                        <h6 class='mb-0 mb-lg-2'>$row[name]</h6>
                         <p class='mb-0'>$" . number_format($row['price'], 2) . "</p>
                     </div>
                     <div class='col-3 d-flex justify-content-center'>
@@ -112,7 +112,7 @@ $result = $conn->query($query);
 
     </div> <!--closing class="col-md-8"-->
 
-    <div class="col-md-4 col-12">
+    <div class="col-lg-4 col-12">
         <h2 class="m-3 pt-2 mt-5 text-center">Order Summary</h2>
         <div class="d-flex justify-content-between">
             <p class="mb-0"><?=$total_items?> items</p>

@@ -30,37 +30,57 @@ WHERE registration.iduser = $iduser";
 
 $result = $conn->query($query);
 
-if ($result->num_rows == 0) {
-header ("Location: register.php");
-exit();
-} 
 ?>
 
 <body>
-<div class="container justify-content-center align-items-center p-0 mt-5 pt-5">
+<div class="container mt-5 pt-5">
+    <h2 class="my-4 text-center"> Booking Confirmation</h2>
+    <p class="text-center">Thank you for booking your events. Please make sure to pay upon arrival.</p>
     
-<h2 class="my-4 text-center">Event booking</h2>
+    <div class="event-list p-2 mx-auto my-4">
+        <h5 class="text-center mb-4">You have booked:</h5>
 
-<p class="text-center">Thank you for successfully booking an event. Please pay on arrival. We hope to see you there!</p>
-<p class="text-center fw-bold mt-4">You have booked:</p>
+        <?php 
+        if ($result->num_rows > 0) {
+            // base price
+            $total_price = 20;
+            echo "<div class='row event-item my-2'>
+                    <div class='col-8 event-name'>Reunion event</div>
+                    <div class='col-4'>
+                        <p class='text-end mb-0 event-price fw-bold'>$20.00</p>
+                    </div>
+                    </div>";
 
-<?php 
-while($row = $result->fetch_assoc()) {
-    echo "<div class='row d-flex justify-content-center my-3'>
-        <div class='col-md-6 text-center'>
-        <p class='text-center mb-1 fw-bold'>". $row['event_name'] . "</p>";
+            while($row = $result->fetch_assoc()) {
+                $total_price += $row['price'];
 
-        if ($row['price'] > 0) {
-            echo "<p class='text-center'>$" . number_format($row['price'], 2) . "</p>"; 
+                echo "<div class='row event-item my-2'>
+                        <div class='col-8 event-name'>$row[event_name]</div>
+                        <div class='col-4'>
+                            <p class='text-end mb-0 event-price fw-bold'>
+                        $" . number_format($row['price'], 2) . "
+                            </p>
+                        </div>
+                        </div>";
+            }
+
+            echo "<hr>
+                <div class='row total-row'>
+                    <div class='col-8'>
+                        <h5>Total:</h5>
+                    </div>
+                    <div class='col-4'>
+                    <h5 class='text-end'>
+                        $" . number_format($total_price, 2) . "
+                    </h5>
+                    </div>
+                </div>";
         } else {
-            echo "<p class='text-center'>Free of charge.</p>";
+            header("Location: register.php");
+            exit();
         }
-
-        echo "</div>";
-        echo "</div>";
-}
-?>
-
+        ?>
+    </div>
 </div>
 
 <?php include './includes/footer.html' ?>

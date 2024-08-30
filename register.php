@@ -108,14 +108,14 @@ if (!$display_r) {
                     </div>
 
                     <div class="form-group">
-                        <h6><label for="events">Select Events:</label></h6>
+                        <h5><label for="events">Select Events:</label></h5>
                         <p></p>
                         <?php
                         if ($display_r->num_rows == 0) {
                             echo '<p class="text-center">There are no events available at the moment. Check back again later!</p>';
                         } 
                         else {
-                            echo '<p>The base price for the event is 20 dollars.</p>';
+                            echo '<p>The base price for attending the reunion is 20 dollars.</p>';
                             while ($row = $display_r->fetch_assoc()) {
                                 echo "<div class='form-check align-items-center mb-2'>
                                     <input type='checkbox' name='selected_events[]' class='form-check-input ' id='event" . $row['idevent'] ."' value='" . $row['idevent'] . "'>

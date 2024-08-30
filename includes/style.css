@@ -77,6 +77,11 @@ body {
 }
 
 /* index.php */
+
+p.thanks {
+    color: #193067;
+}
+
 .carousel-item {
     height: 300px; /* fixing height of carousel photos */
 }
@@ -219,6 +224,12 @@ i {
 /* cart  */
 
 .cart-img {
+    border-radius: 5px;
+    height: 100px;
+    max-width: 100%;
+}
+
+.cart-row {
     height: 100px;
 }
 
@@ -260,6 +271,9 @@ footer {
 }
 
 /* checkbox for register page */
+.form-check-label {
+    color: #182E63;
+}
 
 .form-check-label:hover {
     text-decoration: underline;
@@ -282,4 +296,17 @@ footer {
 .fa-check-square {
     color: #095D36;
     font-size: larger;
+}
+
+/* styling registered page */
+
+.event-list {
+    border: 1px solid;
+    border-radius: 8px;
+    background-color: #EFF2FB;
+    max-width: 500px;
+}
+
+.event-price {
+    color: #193067;
 }

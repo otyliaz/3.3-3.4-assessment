@@ -98,16 +98,16 @@ $display_r = $conn->query($display_q);
                     $imagepath = "./item_images/$row[image_url]";
 
                     echo "
-                    <div class='row d-flex justify-content-between align-items-center'>
-                        <div class='col-2'>
-                            <img class='cart-img' src='";
+                    <div class='row d-flex justify-content-between align-items-center cart-row'>
+                        <div class='col-2 pe-0 justify-content-center d-flex'>
+                            <img class='cart-img py-1' src='";
                             if (file_exists($imagepath)) {
                                 echo $imagepath; }
                             else {echo "./item_images/no_img.png";}
                             echo "' alt='$row[name]'>
                         </div>
                         <div class='col-3'>
-                            <h6>$row[name]</h6>
+                            <h6 class='mb-0 mb-lg-2'>$row[name]</h6>
                             <p class='mb-0'>$" . number_format($row['price'], 2) . "</p>
                         </div>
                         <div class='col-3 d-flex justify-content-center'>
@@ -122,8 +122,8 @@ $display_r = $conn->query($display_q);
             ?>
 
             <div class="d-flex w-100 my-3 justify-content-between">
-                <h3>Total price:</h3>
-                <h3 class="me-5">$<?= number_format($total_price, 2) ?></h3>
+                <div class="col-9"><h3>Total price:</h3></div>
+                <div class="col-3 text-center"><h3 class="">$<?= number_format($total_price, 2) ?></h3></div>
             </div>
         </div>
         <div class="col-md-4 col-12 my-auto">
