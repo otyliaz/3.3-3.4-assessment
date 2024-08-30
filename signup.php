@@ -66,8 +66,8 @@ $conn->close();
 <div class="container mt-5 pt-5">
     <div class="row justify-content-center">
         <div class="col-12 col-md-8 offset-md-2">
-            <h2 class="my-4 text-center">Sign up!</h2>
-            <p class="text-center">Already have an account? Click <a href="login.php">here</a> to login.</p>
+            <h2 class="my-4">Sign up!</h2>
+            <p>Already have an account? Click <a href="login.php">here</a> to login.</p>
             <div class="form-container">
                 <form action="signup.php" method="post">
                     <div class="form-group mb-3">

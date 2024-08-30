@@ -123,7 +123,7 @@ $result = $conn->query($query);
             <h5>Total</h5>
             <h5 class="text-end">$<?=number_format($total_price, 2)?></h5>
         </div>
-        <a class="btn btn-green mt-3" href="checkout.php">Place Order</a>
+        <a class="btn btn-green mt-3 w-100" href="checkout.php">Place Order</a>
     </div>
 
     

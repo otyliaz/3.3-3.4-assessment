@@ -115,6 +115,7 @@ if (!$display_r) {
                             echo '<p class="text-center">There are no events available at the moment. Check back again later!</p>';
                         } 
                         else {
+                            echo '<p>The base price for the event is 20 dollars.</p>';
                             while ($row = $display_r->fetch_assoc()) {
                                 echo "<div class='form-check align-items-center mb-2'>
                                     <input type='checkbox' name='selected_events[]' class='form-check-input ' id='event" . $row['idevent'] ."' value='" . $row['idevent'] . "'>

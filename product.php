@@ -86,9 +86,9 @@ else {
 <body>
 <?php include './includes/nav.php';?>
 
-<div class="container">
+<div class="container d-flex align-items-center justify-content-center">
 
-<div class="row">
+<div class="row w-100">
 
 <div class="col-md-6">
 <?php echo "<img class='my-3 mt-4 img-product' src='";
@@ -133,12 +133,12 @@ $imagepath = "./item_images/$row[image_url]";
         </button>
       </div>  
     </div>
-    <button type='submit' class='btn btn-green ms-5'><i class='fa fa-shopping-cart' aria-hidden='true'></i>Add to cart</button>
+    <button type='submit' class='btn btn-green ms-3'><i class='fa fa-shopping-cart' aria-hidden='true'></i>Add to cart</button>
     <input type='hidden' name='idproduct' value='$row[idproduct]'>
   </form>";
   } else {
     echo "<p>You have already placed an order.</p> 
-    <a class='btn btn-blue' href='cart.php'>View Cart</a><br>";
+    <a class='btn btn-blue' href='cart.php'><i class='fa fa-shopping-cart me-2' aria-hidden='true'></i>View Cart</a><br>";
   }
 
   if (isset($_SESSION['admin'])) {

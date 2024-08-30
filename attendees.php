@@ -43,7 +43,7 @@ if ($result = $conn->query($query)) {
                 <th>Graduation Year</th>
                 <th>Booked Events</th>
                 <th>Order Items</th>
-                <th>Paid</th>
+                <th>Order Paid</th>
             </tr>
         </thead>
         <tbody>
@@ -63,7 +63,7 @@ if ($result = $conn->query($query)) {
 
                     $cart_r = $conn->query($cart_q);
                     
-                    $event_q = "SELECT event.name AS event_name 
+                    $event_q = "SELECT event.name AS event_name, event.price 
                     FROM registration 
                     JOIN user ON registration.iduser = user.iduser 
                     JOIN event ON event.idevent = registration.idevent 
@@ -80,15 +80,31 @@ if ($result = $conn->query($query)) {
                         <td>$row[grad_year]</td>
                         <td>";
                         
-                    while($event = $event_r->fetch_assoc()) {
-                        echo $event['event_name'] . "<br>";
+                    //if they have registered for an event
+                    if ($event_r->num_rows > 0) {
+                        //$20 base price for the event
+                        $total_event_price = 20;
+
+                        //loop through items
+                        while($event = $event_r->fetch_assoc()) {
+                            $total_event_price += $event['price'];
+                            echo $event['event_name'] . "<br>";
+                        }
+                        echo "$" .number_format($total_event_price, 2);
                     }
                         
                     echo "</td>
                         <td>";
                         
-                    while($order = $cart_r->fetch_assoc()) {
-                        echo $order['product_name'] . " x" . $order['item_quantity'] . "<br>";
+                    //if ordered cart has items,
+                    if ($cart_r->num_rows > 0) {
+                        $order_price = 0;
+                        //loop through items
+                        while($order = $cart_r->fetch_assoc()) {
+                            $order_price += $order['price'];
+                            echo $order['product_name'] . " x" . $order['item_quantity'] . "<br>";
+                            }
+                        echo "$" .number_format($order_price, 2);
                     }
                 echo "</td>
                     <td>";
