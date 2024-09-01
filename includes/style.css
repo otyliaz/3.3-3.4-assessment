@@ -271,6 +271,10 @@ footer {
 }
 
 /* checkbox for register page */
+
+.form-check-input {
+    outline: 1px solid #000000
+}
 .form-check-label {
     color: #182E63;
 }

@@ -15,10 +15,12 @@ if (isset($_POST['idcart'])) {
     if ($conn->query($update_q)) {
         header("Location: cart.php");
         exit();
+        
     } else {
-        echo "<p>There was an error reverting your order. Please try again later.</p>";
+        echo "Error updating product: " . mysqli_error($conn);
     }
-} else {
+
+} else { //if the idcart is not sent
     header("HTTP/1.0 404 Not Found");
     include '404.php';
     exit();

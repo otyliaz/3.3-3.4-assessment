@@ -7,7 +7,7 @@
 
 <body>
 <?php
-require_once "./includes/connect.inc";
+require_once './includes/connect.inc';
 include './includes/nav.php';
 
 if (isset($_POST['signup'])) {
@@ -30,6 +30,7 @@ if (isset($_POST['signup'])) {
             $nametaken = 'This username is already taken. Please choose another one.';
         } 
         else {
+            //if the passwords match
             if ($_POST['password'] == $_POST['confirm']) {
                 // hash the password
                 $passworden = hash('sha256', $password);
@@ -60,20 +61,23 @@ if (isset($_POST['signup'])) {
         echo "Error: " . mysqli_error($conn);
     }
 }
-
-$conn->close();
 ?>
+
 <div class="container mt-5 pt-5">
+
     <div class="row justify-content-center">
         <div class="col-12 col-md-8 offset-md-2">
             <h2 class="my-4">Sign up!</h2>
             <p>Already have an account? Click <a href="login.php">here</a> to login.</p>
+
+            <!-- sign up form -->
             <div class="form-container">
                 <form action="signup.php" method="post">
                     <div class="form-group mb-3">
                         <label for="username">Username:</label>
                         <input class="form-control" type="text" name="username" id="username" placeholder="Type here..." required> 
                         <?php if (isset($nametaken)) {
+                            //display error if the username already exists
                             echo '<p class="error p-2 my-2 text-center">' . $nametaken . '</p>';
                         } ?>
                     </div>
@@ -85,14 +89,16 @@ $conn->close();
                         <label for="confirm">Confirm password:</label>
                         <input class="form-control" type="password" name="confirm" id="confirm" placeholder="Type here..." minlength="8" required> 
                         <?php if (isset($confirmerror)) {
+                            //display error if the passwords don't match
                             echo '<p class="error p-2 mt-3 mb-0 text-center">' . $confirmerror . '</p>';
                         } ?>
                     </div>
                     <input class="btn btn-blue w-100" type="submit" name="signup" value="Sign up!">
                 </form>
-            </div>
-        </div>
-    </div>
+            </div> <!-- closing form container -->
+        </div> <!-- closing col-12 ... -->
+    </div> <!-- closing row -->
+    
 </div>
 
 <?php include './includes/footer.html'?>

@@ -30,7 +30,6 @@ if ($cart_r->num_rows > 0) { //if cart exists
 }
 
 //if the cart isn't already ordered 
-//(to fix the problem of the stock always going down)
 if ($ordered != 1) {
 
     // get items in cart
@@ -38,25 +37,22 @@ if ($ordered != 1) {
     WHERE idcart = $idcart";
     $fetch_items_r = $conn->query($fetch_items_q);
     
+    //if items exist
     if ($fetch_items_r->num_rows > 0) {
-        // decrease stock
-        while ($row = $fetch_items_r->fetch_assoc()) {
-            $idproduct = $row['idproduct'];
-            $quantity = $row['item_quantity'];
-            $update_stock_q = "UPDATE product SET stock = stock - $quantity WHERE idproduct = $idproduct";
-            $conn->query($update_stock_q);
-        }
 
         // mark cart as ordered
         $update_q = "UPDATE cart SET ordered = 1 WHERE idcart = $idcart";
         if ($conn->query($update_q)) {
+            // if it is successful, they will see this message.
             $success_message = "<p>Your order has been successfully placed!</p>";
         } else {
+            // if it is not successful, they will see this message
             $error_message = "<p>There was an error processing your order. Please try again later.</p>";
         }
+
     } else {
-        header("HTTP/1.0 404 Not Found");
-        include '404.php';
+        //there are no items in the cart, so redirect back to cart. 
+        header("Location: cart.php");
         exit();
     }
 }
@@ -73,9 +69,7 @@ $display_r = $conn->query($display_q);
 
     <div class="row">
         <div class="col-md-8 col-12 pe-4">
-            <div class="d-flex justify-content-between align-items-center">
-                <h1 class="m-3 ms-0">My Order</h>
-            </div>
+            <h1 class="m-3 ms-0">My Order</h1>
 
             <?php
             if (isset($success_message)) {
@@ -85,6 +79,7 @@ $display_r = $conn->query($display_q);
                 echo $error_message;
             }
 
+            //if there is nothing in the cart
             if ($display_r->num_rows == 0) {
                 echo '<p>You currently have nothing in your cart. Go to the shop to add some items!</p>';
             } else {
@@ -92,8 +87,10 @@ $display_r = $conn->query($display_q);
                 $total_items = 0;
 
                 while ($row = $display_r->fetch_assoc()) {
-                    $item_total = $row['item_quantity'] * $row['price'];
-                    $total_price += $item_total;
+                    //get total price of item
+                    $item_total_price = $row['item_quantity'] * $row['price'];
+                    //add it to cart total price
+                    $total_price += $item_total_price;
                     $total_items += $row['item_quantity'];
                     $imagepath = "./item_images/$row[image_url]";
 
@@ -101,6 +98,7 @@ $display_r = $conn->query($display_q);
                     <div class='row d-flex justify-content-between align-items-center cart-row'>
                         <div class='col-2 pe-0 justify-content-center d-flex'>
                             <img class='cart-img py-1' src='";
+                            //add image here if it exists
                             if (file_exists($imagepath)) {
                                 echo $imagepath; }
                             else {echo "./item_images/no_img.png";}
@@ -114,32 +112,41 @@ $display_r = $conn->query($display_q);
                             <p class='mb-0'>Qty: $row[item_quantity]</p>
                         </div>
                         <div class='col-3'>
-                            <h6 class='mb-0 text-center'>$" . number_format($item_total, 2) . "</h6>
+                            <h6 class='mb-0 text-center'>$" . number_format($item_total_price, 2) . "</h6>
                         </div>
                     </div>";
                 }
             }
             ?>
 
-            <div class="d-flex w-100 my-3 justify-content-between">
-                <div class="col-9"><h3>Total price:</h3></div>
-                <div class="col-3 text-center"><h3 class="">$<?= number_format($total_price, 2) ?></h3></div>
+            <!-- showing total items and price -->
+            <div class="d-flex justify-content-between mt-3">
+                <p class="mb-0 px-3"><?=$total_items?> items</p>
             </div>
+            <hr>
+            <div class="d-flex justify-content-between">
+                <h4 class="px-3">Total</h4>
+                <h4 class="text-end px-3">$<?=number_format($total_price, 2)?></h4>
+            </div>
+            
         </div>
+
         <div class="col-md-4 col-12 my-auto">
 
-    <?php if ($paid == 1) {
-        echo "<p>Thank you for paying for your order. If you haven't already received your items, you will receive them shortly.</p>";
-    } else { 
-    echo "
-        <p class='mt-4'>If you would like to edit your order, please click the button below.</p>
-        <p>Remember to place the order again for it to go through.</p>
-        <p class='mb-0'>Pay for and pick up your items at the reunion.</p>
-        <form method='post' action='revert_order.php' class='text-center'>
-            <input type='hidden' name='idcart' value='$idcart'>
-            <button type='submit' class='btn btn-red mt-3 w-100'>Re-open Order</button>
-        </form>";
-} ?>
+        <?php 
+        if ($paid == 1) {
+            echo 
+            "<p>Thank you for paying for your order. If you haven't already received your items, you will receive them shortly.</p>";
+        } else { 
+            echo "
+            <p class='mt-4'>If you would like to edit your order, please click the button below.</p>
+            <p>Remember to place the order again for it to go through.</p>
+            <p class='mb-0'>Pay for and pick up your items at the reunion.</p>
+            <form method='post' action='revert_order.php' class='text-center'>
+                <input type='hidden' name='idcart' value='$idcart'>
+                <button type='submit' class='btn btn-red mt-3 w-100'>Re-open Order</button>
+            </form>";
+        } ?>
 
         </div>
     </div>

@@ -1,7 +1,9 @@
 
 <nav class="navbar navbar-expand-md mb-2">
     <div class="container-fluid">   
+        <!-- logo -->
         <a class="navbar-brand" href="index.php"><img id="logo" src="./images/logo.png" alt="CAS 100" height="60px" width= "60px"></a>
+        <!-- navbar hamburger button on small screens -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -22,7 +24,6 @@
                 </li> 
             </ul>
 
-            <div class="">
             <ul class="navbar-nav align-items-center ms-auto">
 
                 <?php 
@@ -49,7 +50,7 @@
                 ?>
                 </li>
             </ul>
-            </div>
+            
         </div>
     </div>
 </nav>

@@ -4,23 +4,31 @@ session_start();
 
 require_once './includes/connect.inc';
 
+//if not admin, redirect back to product page
+if (!isset($_SESSION['admin'])) {
+    header("Location: product.php?id=$idproduct");
+}
+
+//get product id from URL
 if (isset($_GET['id'])) {
+    
     $idproduct = $_GET['id'];
 
     $query="SELECT * FROM product WHERE idproduct = $idproduct"; 
     $result = $conn->query($query);
 
-    $row = $result->fetch_assoc(); //since idproduct is unique, don't need to validate number of rows
-}
+    $row = $result->fetch_assoc();
 
-else {
+    if ($result->num_rows != 1) {  
+        header("HTTP/1.0 404 Not Found");
+        include '404.php';
+        exit();
+    }
+
+} else {
     header("HTTP/1.0 404 Not Found");
     include '404.php';
     exit();
-}
-
-if (!isset($_SESSION['admin'])) {
-    header("Location: product.php?id=$idproduct");
 }
 
 if (isset($_POST['edit'])) {
@@ -36,8 +44,10 @@ if (isset($_POST['edit'])) {
         $stmt->execute();
         $stmt->close();
 
+        // redirect to shop if successful
         header("Location: shop.php");
         exit();
+
     } else {
         echo "Error updating product: " . mysqli_error($conn);
     }
@@ -48,8 +58,10 @@ if (isset($_POST['edit'])) {
 <html lang="en">
   <head>
     <?php
-    if ($row) { //if row (product id) exists,
-    echo '<title> Edit product "'.$row['name'].'" - CAS Centenary</title>';}
+    if ($row) { 
+        //if row (product id) exists, put the product name into the page title
+        echo '<title> Edit product "'.$row['name'].'" - CAS Centenary</title>';
+    }
     include './includes/basehead.html'; ?>
   </head>
 
@@ -61,6 +73,7 @@ if (isset($_POST['edit'])) {
 
     <h1 class="my-3">Edit Product</h1>
 
+    <!-- edit form -->
     <form action="editproduct.php?id=<?=$idproduct?>" method="post"> 
     <div class="form-group mb-3">
         <label for="name">Product name:</label>
@@ -68,11 +81,11 @@ if (isset($_POST['edit'])) {
     </div>
     <div class="form-group mb-3">
         <label for="price">Price:</label>
-        <input class="form-control" type="number" name="price" id="price" step="any" value="<?=$row['price']?>" required>
+        <input class="form-control" type="number" name="price" id="price" min=0 step="any" value="<?=$row['price']?>" required>
     </div>
     <div class="form-group mb-3">
         <label for="stock">Stock:</label>
-        <input class="form-control" type="number" name="stock" id="stock" step="1" value="<?=$row['stock']?>" redivred>
+        <input class="form-control" type="number" name="stock" id="stock" min=0 step="1" value="<?=$row['stock']?>" redivred>
     </div>
     <div class="form-group mb-3">
         <label for="description">Description:</label>

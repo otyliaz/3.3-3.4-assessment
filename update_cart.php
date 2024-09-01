@@ -6,15 +6,21 @@ session_start();
 require_once './includes/connect.inc';
 
 if (isset($_SESSION['iduser'])) {
+    //get iduser
     $iduser = $_SESSION['iduser'];
+
+//if not logged in, go to login.php
 } else {
-    header ("Location: index.php");
+    header ("Location: login.php");
+    exit();
 }
 
+//if they change an item's quantity in the cart
 if (isset($_POST['idproduct']) && isset($_POST['quantity'])) {
     $idproduct = $_POST['idproduct'];
     $quantity = $_POST['quantity'];
 
+    //if the new quantity is negative, don't do anything
     if ($quantity < 1) {
         header ("Location: cart.php");
         exit();
@@ -35,15 +41,19 @@ if (isset($_POST['idproduct']) && isset($_POST['quantity'])) {
         if ($update_r) {
             //echo "<p>successful update</p>";
             header ("Location: cart.php");
+            exit();
+
         } else {
             echo "Error: " . mysqli_error($conn);
-            exit();
         }
+
     } else {
         // echo "Cart not found.";
-        header("Location: index.php");
+        header("Location: cart.php");
+        exit();
     }
-} else {
+
+} else { //quantity change was not updated
     header("HTTP/1.0 404 Not Found");
     include '404.php';
     exit();

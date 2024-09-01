@@ -2,7 +2,7 @@
 <html>
 <head>
     <?php include './includes/basehead.html'; ?>
-    <title>404 Not Found</title>
+    <title>404 Not Found - CAS Centenary</title>
 </head>
 <body>
     <?php include './includes/nav.php';?>

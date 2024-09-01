@@ -26,6 +26,7 @@ include './includes/nav.php';
                     <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
                 </div>
 
+                <!-- carousel images -->
                 <div class="carousel-inner">
                     <div class="carousel-item active">
                         <img src="./images/history1.jpg" class="w-100 h-100" alt="CAS school photo">
@@ -37,6 +38,8 @@ include './includes/nav.php';
                         <img src="./images/history3.jpg" class="w-100 h-100" alt="CAS school photo">
                     </div>
                 </div>
+
+                <!-- carousel next and previous image controls -->
                 <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
@@ -45,6 +48,7 @@ include './includes/nav.php';
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
+
             </div>
         </div>
 
@@ -60,35 +64,33 @@ include './includes/nav.php';
                 $query = "SELECT * FROM `registration` WHERE iduser = $iduser";
                 $result = $conn->query($query);
 
-                // if the user has already registered,
+                // if the user has already registered, show thank you for booking
                 if ($result->num_rows > 0) {
                     echo "<p class='my-2 fw-bold thanks'>Thank you for booking. We hope to see you next year!</p>";
-                    exit();
-                } else {
+                
+                } else { //show register button if they haven't already
                 echo "<p>Book your spot for the reunion!</p>
-                <a class='btn btn-green' href='register.php'>Register Now!</a>"; //the button is weird when i click on it
+                <a class='btn btn-green me-3' href='register.php'>Register Now!</a>"; //the button is weird when i click on it
                 }
-            } else {
+
+            } else { //if they haven't logged in
                 echo "<p>Create an account to book one of the limited spaces available at the reunion.</p>
-                <a class='btn btn-green' href='signup.php'>Sign Up Now!</a>";
+                <a class='btn btn-green me-3' href='signup.php'>Sign Up Now!</a>";
             }
 
+            //admin buttons for viewing attendees and adding events
             if (isset($_SESSION['admin'])) {
-                echo "<a class='btn btn-red mx-3' href='attendees.php'>View attendees</a>";
-                echo "<a class='btn btn-red' href='add_event.php'>Add an event</a>";}
+                echo "<a class='btn btn-red' href='attendees.php'>View attendees</a>";
+                echo "<a class='btn btn-red ms-3' href='add_event.php'>Add an event</a>";}
             ?>
             
-        </div>
+        </div><!-- closing class="col-md-6" -->
 
-    </div>
-
-    <!-- <div class="row">
-
-    </div> -->
+    </div> <!--closing class="row" -->
 </div>
 
-
 <?php include './includes/footer.html'?>
+
 </body>
 </html>
 

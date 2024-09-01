@@ -2,12 +2,13 @@
 
 session_start();
 
-require_once ('./includes/connect.inc');
+require_once './includes/connect.inc';
 
 if (isset($_SESSION['iduser'])) {
     $iduser = $_SESSION['iduser'];
 } else {
     header ("Location: index.php");
+    exit();
 }
 
 if (isset($_GET['id'])) {
@@ -26,15 +27,18 @@ if (isset($_GET['id'])) {
         $delete_r = $conn->query($delete_q);
 
         if ($delete_r) {
+            //successfully deleted
             header("Location: cart.php");
+            exit();
+            
         } else {
             echo "Error: " . mysqli_error($conn);
-            exit();
         }
 
     } else {
         // echo "Cart not found.";
         header("Location: index.php");
+        exit();
     }
     
 } else {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>CAS Centenary</title>
+    <title>View Attendees - CAS Centenary</title>
     <?php include './includes/basehead.html'; ?>
 </head>
 
@@ -10,25 +10,27 @@ session_start();
 require_once "includes/connect.inc";
 include './includes/nav.php';
 
+//if not admin, redirect the user o index
 if (!isset($_SESSION['admin'])) {
-    echo "You do not have permission to view this page.";
     header ("Location: index.php");
     exit();
 }
 
+// huge query
 $query = "SELECT user.iduser, user.username, user.email, user.fname, user.lname,
  user.grad_year, cart.idcart, cart.paid as order_paid, user.event_paid
 FROM user JOIN cart on user.iduser = cart.iduser";
 
+//if query is successful
 if ($result = $conn->query($query)) {
-    
     while($row = $result->fetch_assoc()) {
+        //puts all fetched data into an array
         $data_result[] = $row;
     }
+
 } else {
     echo "Error fetching data: " . mysqli_error($conn);
 }
-
 ?>
 
 <body>
@@ -50,13 +52,16 @@ if ($result = $conn->query($query)) {
         </thead>
         <tbody>
             <?php 
+            // if no results found,
             if (empty($data_result)) {
                 echo "<tr>
                     <td colspan='7' class='text-center'>No users found.</td>
                 </tr>";}
             else {
+                // go through each data result
                 foreach ($data_result as $row) { 
-                    
+
+                    //select user cart info
                     $cart_q = "SELECT product.name AS product_name, product.price, cart_item.item_quantity, cart.ordered, cart.idcart
                     FROM cart_item
                     JOIN product ON cart_item.idproduct = product.idproduct
@@ -65,6 +70,7 @@ if ($result = $conn->query($query)) {
 
                     $cart_r = $conn->query($cart_q);
                     
+                    //select user event booking info
                     $event_q = "SELECT event.name AS event_name, event.price 
                     FROM registration 
                     JOIN user ON registration.iduser = user.iduser 

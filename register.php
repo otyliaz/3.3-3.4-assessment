@@ -36,6 +36,10 @@ if (isset($_POST['register'])) {
     $email = trim($_POST['email']);
     $grad_year = trim($_POST['grad_year']);
 
+    if (empty($grad_year)) {
+        $grad_year = null;
+    }
+
     if (isset($_POST['selected_events'])) {
         $events = $_POST['selected_events'];
     } else {
@@ -47,27 +51,36 @@ if (isset($_POST['register'])) {
         $email_error = "Please enter a valid email.";
     } else {
 
-        $update_q= "UPDATE `user` SET `email`=?, `fname`=?, `lname`=?, `grad_year`=? WHERE iduser=?";
-        if ($stmt = $conn->prepare($update_q)) {
-            $stmt->bind_param("sssii", $email, $fname, $lname, $grad_year, $iduser);
-            $stmt->execute();
-            $stmt->close();
+        if (!empty($events)) {
+            foreach ($events as $idevent) {
+                $insert_q = "INSERT INTO `registration` (iduser, idevent) VALUES ($iduser, $idevent)";
+                $insert_r = $conn->query($insert_q);
+            }
+
+            if ($grad_year !== null) {
+                $update_q = "UPDATE `user` SET `email`=?, `fname`=?, `lname`=?, `grad_year`=? WHERE iduser=?";
+                $stmt = $conn->prepare($update_q);
+                $stmt->bind_param("sssii", $email, $fname, $lname, $grad_year, $iduser);
+            } else {
+                $update_q = "UPDATE `user` SET `email`=?, `fname`=?, `lname`=? WHERE iduser=?";
+                $stmt = $conn->prepare($update_q);
+                $stmt->bind_param("sssi", $email, $fname, $lname, $iduser);
+            }
+            
+            if ($stmt->execute()) {
+                $stmt->close();
+                header("Location: registered.php"); 
+                exit(); 
+            } else {
+                echo "Error updating user: " . mysqli_error($conn);
+            }
+
         } else {
-            echo "Error updating user: " . mysqli_error($conn);
+            $event_error = "Please choose at least one event.";
         }
 
     }
 
-    if (!empty($events)) {
-        foreach ($events as $idevent) {
-            $insert_q = "INSERT INTO `registration` (iduser, idevent) VALUES ($iduser, $idevent)";
-            $insert_r = $conn->query($insert_q);
-        }
-        header("Location: registered.php"); 
-        exit();
-    } else {
-        $event_error = "Please choose at least one event.";
-    }
 }
 
 $display_q = "SELECT * FROM event";
@@ -85,8 +98,13 @@ if (!$display_r) {
     <div class="row justify-content-center">
         <div class="col-12 col-md-8 offset-md-2">   
             <h2 class="my-4">Event Booking</h2>
+            
             <div class="form-container">
                 <form action="register.php" method="post"> 
+                                            
+                <?php if (isset($event_error)) {
+                    echo '<p class="error p-2 my-3 text-center">' . $event_error . '</p>';
+                    }  ?>
                     <div class="form-group mb-3">
                         <label for="fname">First Name:</label>
                         <input class="form-control" type="text" name="fname" id="fname" minlength="2" placeholder="Type here..." required>
@@ -103,8 +121,8 @@ if (!$display_r) {
                     } ?>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="grad_year">Graduation Year:</label>
-                        <input class="form-control mb-2" type="number" name="grad_year" id="grad_year" min="1925" max="2024" placeholder="Type here..." required>
+                        <label for="grad_year">Graduation Year (optional): </label>
+                        <input class="form-control mb-2" type="number" name="grad_year" id="grad_year" min="1925" max="2024" placeholder="Type here...">
                     </div>
 
                     <div class="form-group">
@@ -121,9 +139,12 @@ if (!$display_r) {
                                     <input type='checkbox' name='selected_events[]' class='form-check-input ' id='event" . $row['idevent'] ."' value='" . $row['idevent'] . "'>
                                     <label class='form-check-label fw-bold' for='event" . $row['idevent'] . "'>
                                         " . $row['name'] . "
-                                    </label>
-                                    <p class='m-0'>$row[description]</p>
-                                    <p class='m-0'>Location: $row[location]</p>";
+                                    </label>";
+                                if (isset ($row['description'])) {
+                                    echo "<p class='m-0'>$row[description]</p>";}
+                                
+                                if (isset ($row['location'])) {                                
+                                    echo "<p class='m-0'>Location: $row[location]</p>"; }
                                     
                                     if ($row['price'] > 0) {
 
@@ -135,10 +156,7 @@ if (!$display_r) {
                                     echo "</div>";
                             }
                         }
-                        
-                    if (isset($event_error)) {
-                    echo '<p class="error p-2 mt-3 mb-0 text-center">' . $event_error . '</p>';
-                    } ?>
+                        ?>
                     
                     </div>
                     
